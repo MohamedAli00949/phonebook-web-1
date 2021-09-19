@@ -1,25 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { Container } from '@material-ui/core';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import useStyles from './styles';
+import NavBar from './components/NavBar/NavBar';
+import AuthForm from './components/AuthForm/AuthForm';
+import Home from './components/Home/Home';
+
+const App = () => {
+    const classes = useStyles();
+
+    return (
+        <BrowserRouter>
+            <Container maxWidth="lg">
+                <NavBar />
+                <Switch>
+                    <Route path="/" exact component={Home} />
+                    <Route path="/auth" exact component={AuthForm} />
+                </Switch>
+            </Container>
+        </BrowserRouter>
+    );
 }
-
 export default App;
