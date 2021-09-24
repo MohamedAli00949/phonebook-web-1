@@ -103,7 +103,7 @@ const AuthForm = () => {
                             <h1>Sign in</h1>
                         )}
                         <Input className="input" name='email' label="Email" handleChange={handleChange} type="email" autoFocus={!isSignUp} />
-                        <Input className="input" name="password" handleChange={handleChange} label="Password" handleChange={handleChange}  type={ showPassword ? 'text' : 'password' } handleShowPassword={handleShowPassword} />
+                        <Input className="input" name="password" handleChange={handleChange} label="Password"  type={ showPassword ? 'text' : 'password' } handleShowPassword={handleShowPassword} />
                         { isSignUp && (<Input className="confirmPassword input" name='confirmPassword' label="Repeat Password" handleChange={handleChange} type={ showPassword ? 'text' : 'password' } handleShowPassword={handleShowPassword} />)}
                         <button type="submit" className="authButton" title="Submit button" >
                             { isSignUp ? " Sign Up" : "Sign In"}

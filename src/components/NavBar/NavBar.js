@@ -34,6 +34,11 @@ function NavBar() {
         setUser(JSON.parse(localStorage.getItem('token')));
     },[location]);
 
+    const addActiveClass = (e) => {
+        e.target.classList.add("activeLink")
+
+    }
+
     return (
         <AppBar className={classes.appBar} position="static" color="inherit">
             <div className={classes.brandContainer} >
@@ -41,7 +46,10 @@ function NavBar() {
             </div>
             <Toolbar className={classes.toolbar}>
                 {user ? (
-                    <Button varient="contained" className={classes.logout} color="secondery" onClick={logout}>Logout</Button>
+                    <>
+                        <Typography component={Link} to="/newContact" color="textSecondary" onClick={addActiveClass} >Add Contact</Typography>
+                        <Button varient="contained" className={classes.logout} color="secondery" onClick={logout}>Logout</Button>
+                    </>
                     ) : (
                     <Button varient="contained" component={Link} to="/auth" className={classes.signin} variant="contained" color="primary">Login</Button>
                 )}

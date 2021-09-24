@@ -1,11 +1,11 @@
 import React from 'react';
 import { InputAdornment, IconButton, TextField } from '@material-ui/core';
 
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import { MdVisibility } from 'react-icons/md';
+import { MdVisibilityOff } from "react-icons/md";
 
 const Input = (props) => {
-    const { name, title, label, handleChange, autoFocus, type, handleShowPassword } = props;
+    const { name, label, handleChange, autoFocus, type, handleShowPassword } = props;
     return (
         <TextField
             className="input"
@@ -23,7 +23,7 @@ const Input = (props) => {
                 endAdornment : (
                     <InputAdornment position='end'>
                         <IconButton onClick={handleShowPassword}>
-                            {type === "password" ? <Visibility/> : <VisibilityOff/>}
+                            {type === "password" ? <MdVisibility/> : <MdVisibilityOff/>}
                         </IconButton>
                     </InputAdornment>
                 ) 
