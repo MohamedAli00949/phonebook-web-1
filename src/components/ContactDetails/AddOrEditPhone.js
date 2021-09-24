@@ -30,7 +30,7 @@ function AddOrEditPhone(props) {
     const getPhoneType = (phone) => {
         const phoneType = phoneTypes.filter((type) => (type.id === phone.type_id));
         return phoneType[0]?.value;
-    }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -40,14 +40,15 @@ function AddOrEditPhone(props) {
         } else {
             await dispatch(createPhone({ ...phoneData, contact_id: contactId}));
         }
+
     }
 
     return (
-        <div className="phone-form">
+        <div>
             <div className="overlay"></div>
             <form autoComplete='off' noValidate onSubmit={handleSubmit} >
                 <div className="phone-input">
-                    <TextField variant="outlined" name="phone" label="Phone Number" fullWidth value={phoneData.value} onChange={(e) => setPhoneData({ ...phoneData, value: e.target.value})} autoFocus type="phone-number"  />
+                    <TextField variant="outlined" name="phone" label="Phone Number" fullWidth value={phoneData.value} onChange={(e) => setPhoneData({ ...phoneData, value: e.target?.value})} autoFocus type="phone-number"  />
                 </div>
                 <div className="phone-types">
                     <input list="types" name="type" id="type" onChange={handleChange} value={getPhoneType(phoneData)} />
@@ -58,6 +59,7 @@ function AddOrEditPhone(props) {
                     </datalist>
                 </div>
                 <Button variant="contained" color="primary" size="large" type="submit" fullWidth>Submit</Button>
+                <Button variant="outlined" color="secondary" size="large" type="submit" fullWidth>Cancel</Button>
             </form>
         </div>
     )
