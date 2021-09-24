@@ -7,7 +7,6 @@ import AddOrEditPhone from './AddOrEditPhone';
 
 const ContactDetails = ({ currentId }) => {
     const contact = useSelector((state) => (currentId ? state.contacts.contacts.find((contact) => contact.id === currentId) : null));
-    const phones = useSelector((state) => state.phones);
     // const deletedPhones = phones
     const dispatch = useDispatch();
     const [showMenu, setShowMenu] = useState(false);
@@ -15,26 +14,30 @@ const ContactDetails = ({ currentId }) => {
     // const [deleteItem, setDeleteItem] = useState(false);
     const [editPhone, setEditPhone] = useState(false);
     const [phone, setPhone] = useState({});
-    const { types } = useSelector((state) => state.phones);
+    const { types, phones } = useSelector((state) => state.phones);
 
     const getPhoneType = (phone) => {
         const phoneType = types.data.filter((type) => (type.id === phone.type_id));
         return phoneType[0].value;
     }
 
+    const deletedPhones = phones?.deleted_id;
+
+    const contactPhones = contact?.phones.filter(phone => phone.id !== deletedPhones);
+
     const copyText = (text) => {
         navigator.clipboard.writeText(text);
     }
 
-    // const deleteItem = (id, type) => {
-    //     // let yes = window.confirm('Are you want to delete?');
+    const deleteItem = (id, type) => {
+        // let yes = window.confirm('Are you want to delete?');
 
-    //     // if(yes) {
-    //         if (type === "phone") {
-    //             dispatch(deletePhone(id));
-    //         }
-    //     // }
-    // };
+        // if(yes) {
+            if (type === "phone") {
+                dispatch(deletePhone(id));
+            }
+        // }
+    };
 
     return (
         <div className="contact-details">
@@ -48,18 +51,15 @@ const ContactDetails = ({ currentId }) => {
                         <p>{contact.email}</p>
                     </div>
                     <ul className="phones">
-                        {contact?.phones.map((phone) =>(
+                        {contactPhones.map((phone) =>(
                             <li key={phone.id} className="contact-item phone" >
                                 <div className="menu">
                                     <div  className="icon" onClick={() => setShowMenu(showMenu => !showMenu)}><MdExpandMore /></div>
                                         {showMenu && (
                                             <div className="phone-icons">
                                                 <div className="phone-icon" onClick={copyText(phone.value)}><MdContentCopy /></div>
-                                                <div className="phone-icon" onClick={() => dispatch(deletePhone(phone.id))}><MdDelete /></div>
-                                                <div className="phone-icon" onClick={() => {
-                                                    setEditPhone(true)
-                                                    setPhone(phone)
-                                                }}><MdModeEdit /></div>
+                                                <div className="phone-icon" onClick={() => deleteItem(phone.id, "phone") }><MdDelete /></div>
+                                                <div className="phone-icon" onClick={() => {setEditPhone(eP => !eP); setPhone(phone)}}><MdModeEdit /></div>
                                             </div>
                                         )}
                                 </div>
@@ -67,7 +67,7 @@ const ContactDetails = ({ currentId }) => {
                                 <p>{phone.value}</p>
                             </li>
                         ))}
-                        <button className="add" title="Add Phone" onClick={() => setAddPhone(true)}>Add Phone</button>
+                        <button className="add" title="Add Phone" onClick={() => setAddPhone(addPhone => !addPhone)}>Add Phone</button>
                     </ul>
                 </div>
                 <div className="contact-notes" >
@@ -80,8 +80,8 @@ const ContactDetails = ({ currentId }) => {
                 </div>
             </div>
             <div>
-                {addPhone || editPhone && (
-                    <AddOrEditPhone editPhone={editPhone} contactId={contact.id} phone={phone} />
+                {(addPhone || editPhone) && (
+                    <AddOrEditPhone editPhone={editPhone} contactId={contact.id} phone={phone} setAddPhone={setAddPhone} setEditPhone={setEditPhone} />
                 )}
             </div>
         </div>

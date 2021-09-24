@@ -16,7 +16,7 @@ const phones = (state = { phones: [], types: []}, action) => {
         case UPDATE_PHONE:
             return {
                 ...state,
-                phones: state.phones.map((phone) => (phone.id === action.data.id ? action.data : phone))
+                phones: action.data
             };
         case DELETE_PHONE : 
             return {
