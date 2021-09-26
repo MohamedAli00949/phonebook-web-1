@@ -13,7 +13,7 @@ export const getContacts = () => async (dispatch) => {
         dispatch({ type: FETCH_CONTACTS, data : data.data });
     } catch(error) {
         console.error(error);
-        dispatch({ type: ERROR, data: error.response.data });
+        dispatch({ type: ERROR, data: error.response?.data });
     }
 };
 
@@ -24,7 +24,7 @@ export const createContact = (contact) => async (dispatch) => {
         dispatch({ type: CREATE_CONTACT, data });
     } catch (error) {
         console.error(error);
-        dispatch({ type: ERROR, data: error.response.data });
+        dispatch({ type: ERROR, data: error.response?.data });
     }
 };
 
@@ -35,7 +35,7 @@ export const deleteContact = (id) => async (dispatch) => {
         dispatch({ type: DELETE_CONTACT, data });
     } catch (error) {
         console.error(error);
-        dispatch({ type: ERROR, data: error.response.data });
+        dispatch({ type: ERROR, data: error.response?.data });
     }
 };
 

@@ -35,7 +35,7 @@ export const deletePhone = (id) => async (dispatch) => {
         dispatch({ type: DELETE_PHONE, data });
     } catch (error) {
         console.error(error);
-        dispatch({ type: ERROR, data: error.response.data });
+        dispatch({ type: ERROR, data: error.response?.data });
     }
 };
 

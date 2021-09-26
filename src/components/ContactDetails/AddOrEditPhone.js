@@ -5,7 +5,7 @@ import { TextField, Button } from '@material-ui/core';
 import { updatePhone, createPhone } from '../../actions/phones';
 
 function AddOrEditPhone(props) {
-    const { editPhone, contactId, phone } = props;
+    const { editPhone, contactId, phone, setAddPhone, setEditPhone } = props;
     const dispatch = useDispatch();
     const [phoneData, setPhoneData] = useState({ type_id: 0, value: '',  });
     const { types } = useSelector((state) => state.phones);
@@ -18,6 +18,8 @@ function AddOrEditPhone(props) {
         } else {
             setPhoneData({ type_id: 0, value: '',  });
         }
+
+        
     }, [editPhone])
 
     const handleChange = (e) => {
@@ -32,6 +34,16 @@ function AddOrEditPhone(props) {
         return phoneType[0]?.value;
     };
 
+    const close = () => {
+        if (editPhone) {
+            setEditPhone(eP => !eP);
+        } else {
+            setAddPhone(aP => !aP);
+        }
+
+        setPhoneData({ type_id: 0, value: '',  });
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -41,25 +53,30 @@ function AddOrEditPhone(props) {
             await dispatch(createPhone({ ...phoneData, contact_id: contactId}));
         }
 
+        close();
     }
 
     return (
         <div>
             <div className="overlay"></div>
             <form autoComplete='off' noValidate onSubmit={handleSubmit} >
-                <div className="phone-input">
-                    <TextField variant="outlined" name="phone" label="Phone Number" fullWidth value={phoneData.value} onChange={(e) => setPhoneData({ ...phoneData, value: e.target?.value})} autoFocus type="phone-number"  />
+                <div className="form-inputs">
+                    <div className="phone-input">
+                        <TextField style={{backgroundColor: '#fff'}} variant="outlined" name="phone" label="Phone Number" fullWidth value={phoneData.value} onChange={(e) => setPhoneData({ ...phoneData, value: e.target?.value})} autoFocus type="phone-number"  />
+                    </div>
+                    <div className="phone-types">
+                        <input list="types" placeholder="Enter the type of phone" name="type" id="type" onChange={handleChange} value={getPhoneType(phoneData)} />
+                        <datalist id="types">
+                            {phoneTypes.map((type) => (
+                                <option value={type.value} key={type.id} />
+                            ))}
+                        </datalist>
+                    </div>
                 </div>
-                <div className="phone-types">
-                    <input list="types" name="type" id="type" onChange={handleChange} value={getPhoneType(phoneData)} />
-                    <datalist id="types">
-                        {phoneTypes.map((type) => (
-                            <option value={type.value} key={type.id} />
-                        ))}
-                    </datalist>
+                <div className="phone-buttons">
+                    <Button variant="contained" color="primary" size="large" type="submit">{editPhone ? 'Save' : 'Add'}</Button>
+                    <Button variant="contained" color="secondary" size="large" onClick={close}>Cancel</Button>
                 </div>
-                <Button variant="contained" color="primary" size="large" type="submit" fullWidth>Submit</Button>
-                <Button variant="outlined" color="secondary" size="large" type="submit" fullWidth>Cancel</Button>
             </form>
         </div>
     )

@@ -39,25 +39,46 @@ ul {
     border-radius: 10px;
     box-shadow: 0 0 4px #333;
     margin-block: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.delete-button {
+    border: 2px solid #3cc;
+    margin-inline: 20px;
+    padding-inline: 10px;
+    padding-block: 14px;
+    font: 20px bold;
+    font-family: fantasy;
+    float: right;
+    border-radius: 10px;
+    cursor: pointer;
 }
 
 
 .contact-details {
-    background: #f8f7f2;
+    background: #ffffffe7;
     padding: 10px;
     border-radius: 20px;
-    box-shadow: 0 0 6px 3px #ccc;
-    -webkit-border-radius: 20px;
-    -moz-border-radius: 20px;
-    -ms-border-radius: 20px;
-    -o-border-radius: 20px;
+    box-shadow: 0 0 6px 3px #0000006b;
+}
+.contact-header {
+    display: flex;
+    justify-content: space-between;
+    flex-flow: wrap;
 }
 
-.contact-details h2 {
+.edit-button {
+    float: right;
+}
+
+.contact-header h2 {
     font-size: 30px;
-    text-align: center;
+    float: left;
     color: rgb(29, 25, 32);
     font-family: system-ui;
+    margin-block: 10px;
+    margin-inline: 20px;
 }
 
 .contact-details h3 {
@@ -75,6 +96,7 @@ ul {
     margin-inline: 1%;
     padding-inline: 2%;
     border-radius: 5%;
+    align-items: center;
 }
 
 .contact-item .copy {
@@ -90,79 +112,85 @@ ul {
 }
 
 .icon {
-    transform: translate(47%, 40%);
+    transform: translate(84%, 22%);
     font-size: 20px;
     color: #857f7f;
     cursor: pointer;
+    margin: 0;
+    padding: 0;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    text-align: center;
     display: none;
-    -webkit-transform: translate(47%, 40%);
-    -moz-transform: translate(47%, 40%);
-    -ms-transform: translate(47%, 40%);
-    -o-transform: translate(47%, 40%);
 }
 
 .phone-icons {
-    display: flex;
-    flex-direction: row;
-    background: #6363d12b;
-    padding: 10px;
-    font-size: 20px;
+    flex-direction: column;
+    margin-left: 10px;
+    border-left: 2px solid #cccccc54;
+    padding-inline: 10px;
+    padding: 0px;
+    font-size: 15px;
     justify-content: space-between;
     margin-block: 10px;
-    border: 2px solid #d5d5bf;
-    border-radius: 8px;
-    box-shadow: 0 0 10px 2px #cbc4c4;
-    cursor: pointer;
+    display: none;
 }
 
 .phone-icon {
     margin: 3px;
-    background: #00000014;
-    padding-block: 10px;
-    padding-inline: 5px;
-    border-radius: 5px;
+    color: #b6a9a9;
+    cursor: pointer;
 }
 
 .contact-item h4 {
     width: auto;
-    float: left;
     margin-block: 10px;
     text-align: center;
+    font-size: 24px;
 }
+
+.phone h4 {
+    margin-bottom: 10px;
+}
+
+.phone p { 
+    margin-block: 16px;
+}
+
+
 
 .contact-item:hover {
     background: #cecece61;
 }
 
-.contact-item:hover .icon, 
+.contact-item:hover .phone-icons {display: flex} 
 .contact-item:hover .copy {
     display: block;
 }
 .phones {
     display: flex;
-    flex-flow: row;
-    margin-block: 20px;
-    margin-inline: 10%;
-    justify-content: space-around;
+    flex-flow: wrap;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-block: 0px;
+    margin-inline: 0%;
     width: auto;
     margin-bottom: auto;
+    width: 100%;
 }
 
-.phones::before {
-    content: "";
-}
 .phones h4 {
-    font-size: 18px;
     font-family: Arial, Helvetica, sans-serif;
     font-weight: bold;
-    text-align: left;
 }
 .phones .phone {
     width: auto;
     padding-block: 0%;
     padding-inline: 2%;
     display: flex;
-    flex-direction: column;
+    flex-flow: wrap;
+    flex-wrap: inherit;
     text-align: center;
     font-size: 16px
 }
@@ -179,21 +207,80 @@ ul {
     cursor: pointer;
 }
 
-.contact-form {
-    display: none;
+.phone-input,
+.phone-types {
+    width: 49%;
+    float: left;
+}
+
+.phone-buttons {
+    width: 100%;
+    margin-block: 5px 10px;
+    display: flex;
+    flex-flow: wrap;
+    justify-content: space-between;
+}
+
+.form-inputs {
+    width: 100%;
+    display: flex;
+    flex-flow: inherit;
+    justify-content: space-between;
+    margin-block: 10px 5px;
+}
+
+.phone-buttons button {
+    float: left;
+    width: 49%;
+    margin-bottom: 6px;
+}
+
+.phone-types input {
+    width: 100%;
+    height: 58px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    font-weight: 400;
+    font: 16px system-ui;
+}
+
+.phone-types input:hover {
+    border: 1px solid #000;
 }
 
 .contact-notes {
-    background: #faebd752;
+    background: #fbf7f2;
     padding-inline: 20px;
     padding-block: 8px;
     margin: 15px;
-    border: 3px solid #dddddd69;
+    border: 3px solid #dddddd;
     border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
 }
 
-.contact-notes h4 {
+.form-overlay {
+    position: fixed;
+    background-color: #0000004f;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+}
 
+.contact-form {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ffffff;
+    border: 1px solid;
+    border-color: var(--main-color);
+    padding: 5px;
+    border-radius: 5px;
+    z-index: 1001;
 }
 
 /* Start Auth Form */

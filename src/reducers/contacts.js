@@ -15,7 +15,7 @@ const contacts = (state = { contacts: [] }, action) => {
         case DELETE_CONTACT: 
             return {
                 ...state,
-                contacts: state.contacts.filter((contact) => contact.id !== action.data)
+                contacts: state.contacts.filter((contact) => contact.id !== action.data.deleted_id)
             };
         case UPDATE_CONTACT : 
             return {
@@ -23,7 +23,7 @@ const contacts = (state = { contacts: [] }, action) => {
                 contacts : state.contacts.map((contact) => (contact.id === action.data.id ? action.data : contact))
             };
         case ERROR : 
-            alert(action.data.message);
+            alert(action?.data?.message);
 
             return {
                 ...state,

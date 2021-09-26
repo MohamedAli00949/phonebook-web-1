@@ -24,7 +24,7 @@ const phones = (state = { phones: [], types: []}, action) => {
                 phones: action.data,
             }
         case ERROR :
-            alert(action.data.message);
+            alert(action?.data?.message);
 
             return {
                 ...state,

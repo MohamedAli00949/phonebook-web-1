@@ -18,7 +18,7 @@ export const signIn = (formData) => API.post('/login', formData);
 
 export const getContacts = () => API.get('/contacts');
 export const createContact = (contact) => API.post('/contacts', contact);
-export const deleteContact = (id) => API.delete(`/contacts/${id}`, id);
+export const deleteContact = (id) => API.delete(`/contacts/${id}`);
 export const updateContact = (id, contact) => API.patch(`/contacts/${id}`, contact);
 
 export const createPhone = (phone) => API.post('/phones', phone);
