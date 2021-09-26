@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { AppBar, Toolbar, Typography, Button } from '@material-ui/core';
-import { Link, useHistory, useLocation } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { LOGOUT } from '../../actions/auth';
-import decode from 'jwt-decode';
 
 import useStyles from './styles';
 
@@ -11,7 +10,6 @@ function NavBar() {
     const classes = useStyles();
     const dispatch= useDispatch();
     const history = useHistory();
-    const location = useLocation();
 
     const [user, setUser] = useState(JSON.parse(localStorage.getItem('token')));
 
@@ -22,17 +20,6 @@ function NavBar() {
 
         setUser(null);
     };
-
-    useEffect(() => {
-
-        if (user) {
-            // const decodedToken = decode(user);
-
-            // if(decodedToken.exp * 1000 < new Date().getTime()) return logout();
-        }
-
-        setUser(JSON.parse(localStorage.getItem('token')));
-    },[location]);
 
     return (
         <AppBar className={classes.appBar} position="static" color="inherit">

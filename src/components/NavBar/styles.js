@@ -40,10 +40,8 @@ export default makeStyles((theme) => ({
         },
     },
     logout: {
-        color: "#7d7dff",
         marginLeft: "20px",
         backgroundColor: "#bfd0ff",
-        boxShadow: "0px 0px 10px 0px #0000004a", 
         color: "#6363d1",
         borderRadius: "5px",
         boxShadow: "5px 5px 10px 0px #849bd9, -5px -5px 24px #b2d1ff",

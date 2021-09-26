@@ -15,12 +15,13 @@ function AddOrEditPhone(props) {
     useEffect(() => {
         if (editPhone) {
             setPhoneData(phone);
+            console.log(phone);
         } else {
             setPhoneData({ type_id: 0, value: '',  });
         }
 
         
-    }, [editPhone])
+    }, [editPhone, phone])
 
     const handleChange = (e) => {
         const typeValue = e.target.value;
@@ -74,7 +75,7 @@ function AddOrEditPhone(props) {
                     </div>
                 </div>
                 <div className="phone-buttons">
-                    <Button variant="contained" color="primary" size="large" type="submit">{editPhone ? 'Save' : 'Add'}</Button>
+                    <Button variant="contained" color="primary" size="large" type="submit">{editPhone ? 'Save Changes' : 'Add Phone'}</Button>
                     <Button variant="contained" color="secondary" size="large" onClick={close}>Cancel</Button>
                 </div>
             </form>

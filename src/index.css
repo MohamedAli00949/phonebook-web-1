@@ -213,7 +213,8 @@ ul {
     float: left;
 }
 
-.phone-buttons {
+.phone-buttons,
+.contact-buttons {
     width: 100%;
     margin-block: 5px 10px;
     display: flex;
@@ -229,11 +230,13 @@ ul {
     margin-block: 10px 5px;
 }
 
-.phone-buttons button {
+.phone-buttons button,
+button.submit {
     float: left;
     width: 49%;
     margin-bottom: 6px;
 }
+
 
 .phone-types input {
     width: 100%;
@@ -258,6 +261,25 @@ ul {
     border-radius: 10px;
     display: flex;
     justify-content: space-between;
+}
+
+.contact-form .input {
+    margin-block: 2%;
+    margin-inline: 1%;
+    width: 98%;
+}
+
+.contact-form select {
+    width: 98%;
+    height: auto;
+    font-size: 22px;
+    padding: 15px;
+    margin-block: 1%;
+    margin-inline: 1%;
+    background: #dadada;
+    color: #909090;
+    border-radius: 6px;
+    border: 2px solid #909090;
 }
 
 .form-overlay {
