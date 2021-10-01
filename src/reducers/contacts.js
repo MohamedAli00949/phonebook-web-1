@@ -1,11 +1,15 @@
-import { FETCH_CONTACTS, CREATE_CONTACT, DELETE_CONTACT, UPDATE_CONTACT, ERROR } from '../actions/contacts';
+import { FETCH_CONTACTS, CREATE_CONTACT, DELETE_CONTACT, UPDATE_CONTACT, CONTACT_ERROR, START_LOADING, END_LOADING } from '../actions/contacts';
 
-const contacts = (state = { contacts: [] }, action) => {
+const contacts = (state = { isLoading: true, contacts: [] }, action) => {
     switch (action.type) {
+        case START_LOADING : 
+            return { ...state, isLoading: true };
+        case END_LOADING : 
+            return { ...state, isLoading: false };
         case FETCH_CONTACTS:
             return {
                 ...state,
-                contacts: action.data
+                contacts: action.data,
             };
         case CREATE_CONTACT: 
             return {
@@ -22,7 +26,7 @@ const contacts = (state = { contacts: [] }, action) => {
                 ...state,
                 contacts : state.contacts.map((contact) => (contact.id === action.data.id ? action.data : contact))
             };
-        case ERROR : 
+        case CONTACT_ERROR : 
             alert(action?.data?.message);
 
             return {

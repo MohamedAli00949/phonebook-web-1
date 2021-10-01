@@ -2,79 +2,49 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
-import Input from './Input';
-import { validateEmail, isLength } from './Validation';
+import { Input, Error } from './Input';
 import { authForm } from '../../actions/auth'
-
-const intialState = { name: '', email: '', password: '', confirmPassword: '' }
+import { useForm } from 'react-hook-form';
 
 const AuthForm = () => {
     const dispatch = useDispatch();
     const history = useHistory();
     const [isSignUp, setIsSignUp] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
-    const [formData, setFormData] = useState(intialState);
     const [error, setError] = useState('');
 
-    const handleError = (formData) => {
-        const activeError = document.querySelector('.error');
+    const { register, errors, handleSubmit, getValues } = useForm();
+    const emailPattern = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
-        const { email, password, confirmPassword } = formData;
+    const handleError = () => {
 
-        if (password !== confirmPassword && isSignUp) {
-            setError("Password did not match.");
-            console.log(password, confirmPassword);
-            activeError.style.display = 'block';
-        } else if (isLength(password)) {
-            setError("Password must be at least 8 characters.");
-            activeError.style.display = 'block';
-        } else {
-            setError(JSON.parse(localStorage.getItem("error")));
-            setFormData({ ...formData, password: password });
-            activeError.style.display = 'none';
-        }
+        const error = JSON.parse(localStorage.getItem('error'));
 
-        if(!validateEmail(email)) {
-            setError("Invalid email ");
-            activeError.style.display = 'block';
-        }
+        const authErrorMessage =  error?.message;
         
-        const authError = JSON.parse(localStorage.getItem('error'));
-
-        const authErrorMessage =  authError?.message;
-
-        if (authError?.errors?.email[0] || authError?.errors?.password[0] || authError?.errors?.name[0]) {
-            setError(authError?.errors?.email[0] || authError?.errors?.password[0] || authError?.errors?.name[0]);
-            activeError.style.display = 'block';
+        if (error?.errors?.email[0] || error?.errors?.password[0] || error?.errors?.name[0]) {
+            console.log(error?.errors?.email[0] || error?.errors?.password[0] || error?.errors?.name[0]);
+            setError(error?.errors?.email[0] || error?.errors?.password[0] || error?.errors?.name[0]);
         } else if (authErrorMessage) {
-            setError(authErrorMessage);
-            activeError.style.display = 'block';
+            console.log(authErrorMessage)
+            setError(authErrorMessage)
         } else {
             setError('');
-            activeError.style.display = 'none';
         }
-
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        await handleError(formData);
-
-        const { name, email, password } = formData;
+    const handleSubmitData = async (data) => {
+        const { name, email, password } = data;
         const user = { name, email, password };
 
         if (isSignUp) {
-            dispatch(authForm(user, history, 'signup'))
+            await dispatch(authForm(user, history, 'signup'))
         }else {
-            dispatch(authForm({ email, password}, history, 'signin'))
+            await dispatch(authForm({ email, password }, history, 'signin'))
         }
 
-    };
+        await handleError();
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
     };
 
     const handleShowPassword = () => setShowPassword((currentShowPassword) => !currentShowPassword);
@@ -91,38 +61,73 @@ const AuthForm = () => {
         <div className="mainContainer">
             <div className="authContainer">
                 <div className={`formContainer ${signUpOrIn}`}>
-                    <form onSubmit={handleSubmit} className="form">
-                        <div className="error" title="Error"><h4>{error}</h4></div>
+                    <form onSubmit={handleSubmit(handleSubmitData)} className="form">
+                        {error && (<Error message={error} title="Error" className="authError" />)}
                         {
                         isSignUp ? (
                             <>
                                 <h1>Create Account</h1>
-                                <Input className="input" name='name' label="Name" handleChange={handleChange} autoFocus />
+                                <Input 
+                                    className="input" 
+                                    name='name' label="Name" 
+                            utoFocus 
+                                    inputRef={register({required: 'Name is required'})}
+                                />
+                                {errors.name && (<Error message={errors.name.message} className="error" />)}
                             </>
                         ): (
                             <h1>Sign in</h1>
                         )}
-                        <Input className="input" name='email' label="Email" handleChange={handleChange} type="email" autoFocus={!isSignUp} />
-                        <Input className="input" name="password" handleChange={handleChange} label="Password"  type={ showPassword ? 'text' : 'password' } handleShowPassword={handleShowPassword} />
-                        { isSignUp && (<Input className="confirmPassword input" name='confirmPassword' label="Repeat Password" handleChange={handleChange} type={ showPassword ? 'text' : 'password' } handleShowPassword={handleShowPassword} />)}
+                        <Input 
+                            className="input" 
+                            name='email' label="Email" type="email" 
+                            autoFocus={!isSignUp} 
+                            inputRef={register({required: 'Email is required', pattern: { value: emailPattern, message: 'Email is invalid'}})}
+                        />
+                        {errors.email && (<Error message={errors.email.message} className="error"  />)}
+                        <Input 
+                            className="input" 
+                            name="password" 
+                            label="Password"  
+                            type={ showPassword ? 'text' : 'password' } 
+                            handleShowPassword={handleShowPassword}
+                            inputRef={register({ required: 'Password is required', minLength: { value: 8, message: "passwords shouldn't be shorter than 8 characters" }})}
+                        />
+                        {errors.password && (<Error message={errors.possword?.message} className="error"  />)}
+                        { isSignUp && (
+                            <>
+                                <Input 
+                                    className="confirmPassword input" 
+                                    name='confirmPassword' label="Repeat Password" 
+                                    type={ showPassword ? 'text' : 'password' } 
+                                    handleShowPassword={handleShowPassword}
+                                    inputRef={register({ required: 'Repeat Password, please', minLength: { value: 8, message: "passwords shouldn't be shorter than 8 characters" }, validate: { checkPasswordConfirmationHandler: (value) => { const { password } = getValues(); return password === value || "Passwords don't match"} } })}
+                                />
+                                {errors.confirmPassword && (<Error message={errors.confirmPassword.message} className="error" />)}
+                            </>
+                        )}
                         <button type="submit" className="authButton" title="Submit button" >
                             { isSignUp ? " Sign Up" : "Sign In"}
                         </button>
+                        <div className="toggleForm">
+                            <h3>{isSignUp ? "Already have an acount ?" : "Done't have an account ?"}</h3>
+                            <button className="ghost authButton" onClick={() => {setIsSignUp((signUp) => !signUp); handleShowPassword(false)}} title="Sign In Button">{isSignUp ? "Sign In" : "Sign Up"}</button>
+                        </div>
                     </form>
                 </div>
                 <div className="overlayContainer">
                     <div className="overlay">
                         { isSignUp ? (
-                            <div class="overlayPanel overlayLeft">
+                            <div className="overlayPanel overlayLeft">
                                 <h1>Welcome Back!</h1>
                                 <p>To keep connected with us please login with your personal info</p>
-                                <button class="ghost authButton" onClick={toggleActiveLogin} title="Sign In Button">Sign In</button>
+                                <button className="ghost authButton" onClick={toggleActiveLogin} title="Sign In Button">Sign In</button>
                             </div>
                         ) : (
-                            <div class="overlayPanel overlayRight">
+                            <div className="overlayPanel overlayRight">
                                 <h1>Hello, Friend!</h1>
                                 <p>Enter your personal details and start journey with us</p>
-                                <button class="ghost authButton" onClick={toggleActiveLogin} title="Sign Up Button" >Sign Up</button>
+                                <button className="ghost authButton" onClick={toggleActiveLogin} title="Sign Up Button" >Sign Up</button>
                             </div>
                         )}
                     </div>

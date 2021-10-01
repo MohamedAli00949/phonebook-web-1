@@ -1,10 +1,10 @@
 import * as api from './../api/index';
-import { ERROR } from './contacts';
 
 export const CREATE_PHONE = 'CREATE_PHONE';
 export const UPDATE_PHONE = 'UPDATE_PHONE';
 export const DELETE_PHONE = 'DELETE_PHONE';
 export const GET_TYPES = 'GET_TYPES';
+export const PHONE_ERROR = 'PHONE_ERROR';
 
 export const createPhone = (phone) => async (dispatch) => {
     try {
@@ -13,7 +13,7 @@ export const createPhone = (phone) => async (dispatch) => {
         dispatch({ type: CREATE_PHONE, data })
     } catch (error) {
         console.error(error);
-        dispatch({ type: ERROR, data: error.response.data });
+        dispatch({ type: PHONE_ERROR, data: error.response?.data });
     }
 };
 
@@ -24,7 +24,7 @@ export const updatePhone = (id, phone) => async (dispatch) => {
         dispatch({ type: UPDATE_PHONE, data });
     } catch (error) {
         console.error(error);
-        dispatch({ type: ERROR, data: error.response.data });
+        dispatch({ type: PHONE_ERROR, data: error.response?.data });
     }
 };
 
@@ -35,7 +35,7 @@ export const deletePhone = (id) => async (dispatch) => {
         dispatch({ type: DELETE_PHONE, data });
     } catch (error) {
         console.error(error);
-        dispatch({ type: ERROR, data: error.response?.data });
+        dispatch({ type: PHONE_ERROR, data: error.response?.data });
     }
 };
 
@@ -46,7 +46,7 @@ export const getTypes = () => async (dispatch) => {
         dispatch({ type: GET_TYPES, data })
     } catch (error) {
         console.error(error);
-        dispatch({ type: ERROR, data: error.response.data });
+        dispatch({ type: PHONE_ERROR, data: error.response.data });
     }
 };
 

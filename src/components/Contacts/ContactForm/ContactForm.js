@@ -3,19 +3,21 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Button, TextField } from '@material-ui/core';
 
 import { createContact, updateContact } from '../../../actions/contacts';
-import AddOrEditPhone from '../../ContactDetails/AddOrEditPhone';
+import { createPhone, updatePhone } from '../../../actions/phones';
+import { AiOutlineCloseCircle } from 'react-icons/ai';
 
 function ContactForm(props) {
     const { currentId, setCloseForm } = props;
     const [phoneData, setPhoneData] = useState({ type_id: 0, value: '',  });
     const [ contactData, setContactData ] = useState({ email: '', name: '', notes: '', phones: [] });
-    const [addPhone, setAddPhone] = useState(true);
-    const [editPhone, setEditPhone] = useState(true);
+    const [addPhone, setAddPhone] = useState(false);
+    const [editPhone, setEditPhone] = useState(false);
+    const [noChange, setNoChange] = useState(true);
     const contact = useSelector((state) => state.contacts.contacts.find(contact => contact.id === currentId));
     const dispatch = useDispatch();
     const { types } = useSelector((state) => state.phones);
 
-    const phoneTypes = types.data;
+    const phoneTypes = types?.data;
 
     // This Function For Handleing the Change At The Type of Phone.
     const handleChangeType = (e) => {
@@ -40,27 +42,32 @@ function ContactForm(props) {
     useEffect( async () => {
         if (contact) {
             if (!contact.phones[0]) {
-                setAddPhone(aP => !aP);
+                setAddPhone(true);
             }else {
-                setEditPhone(eP => !eP);
+                setEditPhone(true);
             }
-            const phones = contact.phones.map(phone => {
-                delete phone.id;
-            });
-            console.log(contact.phones)
-            setContactData({ email: contact.email, name: contact.name, notes: contact.notes, phones: phones });
+            setContactData({ email: contact.email, name: contact.name, notes: contact.notes, phones: contact.phones });
         }
     }, [contact]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (phoneData.type_id !== 0 && phoneData.value !== '' ) {
-            await setContactData({ ...contactData, phones: contactData.phones.push(phoneData) });
-        }
+        await contactData.phones.map(phone => {
+            delete phone.id;
+        });
 
         if (currentId) {
-            await dispatch(updateContact(currentId, contactData));
+            if (!contactData.notes) {
+                await dispatch(updateContact(currentId, { ...contactData, notes: ''} ));
+            } else {
+                await dispatch(updateContact(currentId, contactData))
+            }
+            if (editPhone && phoneData.type_id !== 0 && phoneData.value !== '') {
+                await dispatch(updatePhone(phoneData?.id, { value: phoneData?.value, type_id: phoneData?.type_id }));
+            } else if (phoneData.type_id !== 0 && phoneData.value !== '') {
+                await dispatch(createPhone({ ...phoneData, contact_id: contact.id}));
+            }
         }else {
             await dispatch(createContact(contactData));
         }
@@ -70,21 +77,24 @@ function ContactForm(props) {
 
     const handleChange = (e) => {
         setContactData({ ...contactData, [e.target.name] : e.target.value });
+        setNoChange(false);
     };
 
     const selectPhones = async (e) => {
         const phone = contact?.phones?.filter(phone => phone.value == e.target.value);
         await setPhoneData(phone[0]);
-        await console.log(phoneData);
+        await setEditPhone(true);
+        setNoChange(false);
     }
 
     return (
         <div className="contact-form">
+            <Button className="close" onClick={clear}><AiOutlineCloseCircle /></Button>
             <form autoComplete="off" onSubmit={handleSubmit}>
                 <TextField className='input' name="name" variant="filled" label="Name" fullWidth value={contactData.name} onChange={handleChange} />
                 <TextField className='input' name="email" variant="filled" label="Email" fullWidth value={contactData.email} onChange={handleChange} />
                 <TextField className='input' name="notes" variant="filled" label="Notes" fullWidth value={contactData.notes} onChange={handleChange} />
-                {(contact.phones[0]) && (<select onChange={selectPhones} >
+                {(contact?.phones[0]) && (<select onChange={selectPhones} >
                     <option >Select Phones</option>
                     {contact?.phones?.map((phone) => (
                         <option value={phone.value}>{`${phone.value} - ${getPhoneType(phone)}`}</option>
@@ -104,7 +114,7 @@ function ContactForm(props) {
                     </div>
                 </div>
                 <div className="contact-buttons">
-                    <Button className="submit" variant="contained" color="primary" size="large" type="submit" fullWidth>{contact ? `Save Changes` : `Add Contact`}</Button>
+                    <Button className="submit" variant="contained" color="primary" size="large" type="submit" fullWidth disabled={noChange}>{contact ? `Save Changes` : `Add Contact`}</Button>
                     <Button className="submit" variant="contained" color="secondary" size="large" type="submit" fullWidth onClick={clear}>Close</Button>
                 </div>
             </form>

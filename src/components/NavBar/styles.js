@@ -1,5 +1,4 @@
 import { makeStyles } from "@material-ui/core/styles";
-import { deepPurple } from '@material-ui/core/colors'; 
 
 export default makeStyles((theme) => ({
     appBar: {
@@ -10,6 +9,7 @@ export default makeStyles((theme) => ({
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: '8px 25px',
+        zIndex: '100',
         [theme.breakpoints.down('sm')]: {
         flexDirection: 'column',
         },
@@ -23,40 +23,67 @@ export default makeStyles((theme) => ({
     toolbar: {
         display: 'flex',
         justifyContent: 'flex-end',
-        width: '400px',
+        width: '62%',
         [theme.breakpoints.down('sm')]: {
-        width: 'auto',
+            width: 'auto',
         },
-    },
-    profile: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        width: '400px',
-        alignItems: 'center',
-        [theme.breakpoints.down('sm')]: {
-        width: 'auto',
-        marginTop: 20,
-        justifyContent: 'center',
-        },
+        fontSize: '15px',
     },
     logout: {
-        marginLeft: "20px",
-        backgroundColor: "#bfd0ff",
-        color: "#6363d1",
-        borderRadius: "5px",
-        boxShadow: "5px 5px 10px 0px #849bd9, -5px -5px 24px #b2d1ff",
-    },
-    profileAction: {
-        display: 'flex',
-        textAlign: 'initial',
+        width: "22%",
+        marginInline: "5px",
+        margin: "5px",
+        padding: "5px",
     },
     brandContainer: {
         display: 'flex',
         alignItems: 'center',
     },
-    purple: {
-        color: theme.palette.getContrastText(deepPurple[500]),
-        backgroundColor: deepPurple[500],
-        marginRight: '10px',
+    logo : {
+        width: '40px',
+        margin: '10px',
+    }, 
+    dAEButton: {
+        margin: '5px',
+        padding: "5px",
+        width: "26%",
+        textTransform: 'capitalize',
+    },
+    addButton : { 
+        width: "32%",
+        margin: "5px",
+        padding: "5px",
+    },
+    searchButton : {
+        fontSize: '25px',
+        background: '#ebf6ff',
+        borderRadius: '20px',
+    },
+    searchResults : {
+        position: 'absolute',
+        top: '100%',
+        right: '25%',
+        width: '100%',
+        background: 'aliceblue',
+        alignItems: 'center',
+        textAlign: 'center',
+        zIndex: '100',
+        padding: '16px',
+        boxShadow: '0px 7px 10px #817878',
+    },
+    contact : {
+        marginInline: '5px',
+        marginBlock: '10px'
+    },
+    searchContainer : {
+        display: 'flex',
+        flexDirection: 'row-reverse',
+        width: 'auto',
+        zIndex: '100',   
+    },
+    searchArrow : {
+        fontSize: '25px',
+        background: 'aliceblue',
+        marginInline: '8px',
     },
 }));
