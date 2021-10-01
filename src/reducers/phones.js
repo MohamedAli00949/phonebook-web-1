@@ -1,5 +1,4 @@
-import { ERROR } from '../actions/contacts';
-import { CREATE_PHONE, UPDATE_PHONE, DELETE_PHONE, GET_TYPES } from '../actions/phones';
+import { CREATE_PHONE, UPDATE_PHONE, DELETE_PHONE, GET_TYPES, PHONE_ERROR } from '../actions/phones';
 
 const phones = (state = { phones: [], types: []}, action) => {
     switch (action.type) {
@@ -11,7 +10,7 @@ const phones = (state = { phones: [], types: []}, action) => {
         case CREATE_PHONE: 
             return {
                 ...state,
-                phones: [...state.phones, action.data]
+                phones: [...state.phones, action?.data?.data]
             };
         case UPDATE_PHONE:
             return {
@@ -21,9 +20,9 @@ const phones = (state = { phones: [], types: []}, action) => {
         case DELETE_PHONE : 
             return {
                 ...state,
-                phones: action.data,
+                phones: action?.data,
             }
-        case ERROR :
+        case PHONE_ERROR :
             alert(action?.data?.message);
 
             return {

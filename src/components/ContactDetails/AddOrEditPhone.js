@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { TextField, Button } from '@material-ui/core';
+import { AiOutlineCloseCircle } from 'react-icons/ai';
 import { updatePhone, createPhone } from '../../actions/phones';
+import useStyles from './styles';
 
 function AddOrEditPhone(props) {
-    const { editPhone, contactId, phone, setAddPhone, setEditPhone } = props;
+    const { editPhone, contactId, phone, setAddPhone, setEditPhone, setPhone } = props;
     const dispatch = useDispatch();
+    const classes = useStyles();
     const [phoneData, setPhoneData] = useState({ type_id: 0, value: '',  });
     const { types } = useSelector((state) => state.phones);
 
@@ -15,13 +18,10 @@ function AddOrEditPhone(props) {
     useEffect(() => {
         if (editPhone) {
             setPhoneData(phone);
-            console.log(phone);
         } else {
             setPhoneData({ type_id: 0, value: '',  });
         }
-
-        
-    }, [editPhone, phone])
+    }, [editPhone]);
 
     const handleChange = (e) => {
         const typeValue = e.target.value;
@@ -50,16 +50,18 @@ function AddOrEditPhone(props) {
 
         if (editPhone) {
             await dispatch(updatePhone(phone.id, { value: phoneData.value, type_id: phoneData.type_id }));
+            await setPhone(phoneData);
         } else {
             await dispatch(createPhone({ ...phoneData, contact_id: contactId}));
+            await setPhone(phoneData);
         }
 
         close();
     }
 
     return (
-        <div>
-            <div className="overlay"></div>
+        <div className={classes.form}>
+            <Button className={classes.close} onClick={close}><AiOutlineCloseCircle /></Button>
             <form autoComplete='off' noValidate onSubmit={handleSubmit} >
                 <div className="form-inputs">
                     <div className="phone-input">

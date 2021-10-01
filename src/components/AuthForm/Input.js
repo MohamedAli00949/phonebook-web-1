@@ -1,18 +1,20 @@
 import React from 'react';
+import Alert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
 import { InputAdornment, IconButton, TextField } from '@material-ui/core';
 
 import { MdVisibility } from 'react-icons/md';
 import { MdVisibilityOff } from "react-icons/md";
 
-const Input = (props) => {
-    const { name, label, handleChange, autoFocus, type, handleShowPassword } = props;
+export const Input = (props) => {
+    const { name, label, inputRef, autoFocus, type, handleShowPassword } = props;
     return (
         <TextField
             className="input"
-            style={{margin: "0px 10px 10px", top: '4%'}}
+            style={{margin: "0px 10px 10px", top: '0%'}}
             name={name}
             title={label}
-            onChange={handleChange}
+            inputRef={inputRef}
             variant="outlined"
             required
             fullWidth
@@ -32,4 +34,12 @@ const Input = (props) => {
     )
 }
 
-export default Input
+export const Error = (props) => {
+    const { message, className } = props;
+
+    return(
+        <Stack className={className} sx={{ width: '100%' }} spacing={2}>
+            <Alert sx={{ mb: 2 }} severity="error" variant="filled">{message}<strong> - Try again later !</strong></Alert>
+        </Stack>
+    )
+}

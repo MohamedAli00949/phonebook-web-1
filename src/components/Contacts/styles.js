@@ -7,5 +7,13 @@ export default makeStyles((theme) => ({
         borderRadius: "10px",
         padding: "10px 20px",
         boxShadow: '0px 0px 16px 4px #6e6e6e80',
-    }
+    },
+    loadingPaper: {
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        padding: '20px', 
+        borderRadius: '15px', 
+        height: '39vh',
+    },
 }))

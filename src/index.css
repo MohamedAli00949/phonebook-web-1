@@ -2,6 +2,7 @@
 
 body {
     background-color: rgb(99, 99, 209);
+    font-family: sans-serif;
 }
 a {
     text-decoration: none;
@@ -12,85 +13,25 @@ ul {
     padding: 0;
 }
 
-.container {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.contacts {
-    width: calc(100% / 3);
-}
-
-.details {
-    width: 63%;
-    margin: 1%;
-}
-
-@media (max-width: 768px) {
-    .contacts, .details {
-        width: 100%;
-        margin: 0;
-    }
+.no-contacts {
+    margin: 50px;
+    padding: 20px;
+    box-shadow: 0 0 10px #3e3d3d;
 }
 
 .contact {
-    background: aliceblue;
+    background: white;
     padding: 10px;
-    border-radius: 10px;
     box-shadow: 0 0 4px #333;
-    margin-block: 10px;
+    margin-block: 2px;
     display: flex;
     justify-content: space-between;
+    border-radius: 6px;
 }
 
-.delete-button {
-    border: 2px solid #3cc;
-    margin-inline: 20px;
-    padding-inline: 10px;
-    padding-block: 14px;
-    font: 20px bold;
-    font-family: fantasy;
-    float: right;
-    border-radius: 10px;
-    cursor: pointer;
+.contact:hover .contact-icon {
+    visibility: visible;
 }
-
-
-.contact-details {
-    background: #ffffffe7;
-    padding: 10px;
-    border-radius: 20px;
-    box-shadow: 0 0 6px 3px #0000006b;
-}
-.contact-header {
-    display: flex;
-    justify-content: space-between;
-    flex-flow: wrap;
-}
-
-.edit-button {
-    float: right;
-}
-
-.contact-header h2 {
-    font-size: 30px;
-    float: left;
-    color: rgb(29, 25, 32);
-    font-family: system-ui;
-    margin-block: 10px;
-    margin-inline: 20px;
-}
-
-.contact-details h3 {
-    font-family: cursive;
-}
-
-.contact-items {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-}
-
 
 .contact-item {
     margin-inline: 1%;
@@ -99,48 +40,13 @@ ul {
     align-items: center;
 }
 
-.contact-item .copy {
-    position: relative;
-    top: 12%;
+.contact-item .icon {
     float: right;
     font-size: 20px;
     color: #857f7f;
-    width: 9%;
     margin-inline: 9px;
     cursor: pointer;
-    display: none;
-}
-
-.icon {
-    transform: translate(84%, 22%);
-    font-size: 20px;
-    color: #857f7f;
-    cursor: pointer;
-    margin: 0;
-    padding: 0;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    text-align: center;
-    display: none;
-}
-
-.phone-icons {
-    flex-direction: column;
-    margin-left: 10px;
-    border-left: 2px solid #cccccc54;
-    padding-inline: 10px;
-    padding: 0px;
-    font-size: 15px;
-    justify-content: space-between;
-    margin-block: 10px;
-    display: none;
-}
-
-.phone-icon {
-    margin: 3px;
-    color: #b6a9a9;
-    cursor: pointer;
+    visibility: hidden;
 }
 
 .contact-item h4 {
@@ -148,10 +54,6 @@ ul {
     margin-block: 10px;
     text-align: center;
     font-size: 24px;
-}
-
-.phone h4 {
-    margin-bottom: 10px;
 }
 
 .phone p { 
@@ -164,47 +66,8 @@ ul {
     background: #cecece61;
 }
 
-.contact-item:hover .phone-icons {display: flex} 
-.contact-item:hover .copy {
-    display: block;
-}
-.phones {
-    display: flex;
-    flex-flow: wrap;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-block: 0px;
-    margin-inline: 0%;
-    width: auto;
-    margin-bottom: auto;
-    width: 100%;
-}
-
-.phones h4 {
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: bold;
-}
-.phones .phone {
-    width: auto;
-    padding-block: 0%;
-    padding-inline: 2%;
-    display: flex;
-    flex-flow: wrap;
-    flex-wrap: inherit;
-    text-align: center;
-    font-size: 16px
-}
-
-.phones .add {
-    margin: 10px;
-    font-size: 20px;
-    font-family: fantasy;
-    text-shadow: 0px 0px 4px #19575f;
-    text-align: center;
-    color: cyan;
-    border: none;
-    background: none;
-    cursor: pointer;
+.contact-item:hover .icon {
+    visibility: visible;
 }
 
 .phone-input,
@@ -252,17 +115,6 @@ button.submit {
     border: 1px solid #000;
 }
 
-.contact-notes {
-    background: #fbf7f2;
-    padding-inline: 20px;
-    padding-block: 8px;
-    margin: 15px;
-    border: 3px solid #dddddd;
-    border-radius: 10px;
-    display: flex;
-    justify-content: space-between;
-}
-
 .contact-form .input {
     margin-block: 2%;
     margin-inline: 1%;
@@ -282,9 +134,17 @@ button.submit {
     border: 2px solid #909090;
 }
 
+.contact-form .close {
+    position: absolute;
+    top: -10%;
+    left: -10%;
+    font-size: 30px;
+    color: #f50057;
+}
+
 .form-overlay {
     position: fixed;
-    background-color: #0000004f;
+    background-color: #0000007a;
     left: 0;
     top: 0;
     width: 100%;
@@ -299,10 +159,22 @@ button.submit {
     transform: translate(-50%, -50%);
     background-color: #ffffff;
     border: 1px solid;
-    border-color: var(--main-color);
+    border-color: #63686c;
     padding: 5px;
     border-radius: 5px;
     z-index: 1001;
+}
+
+@media (max-width: 900px) {
+    .contact-form {
+        background-color: #ffffff;
+        border: 1px solid;
+        border-color: #63686c;
+        padding: 5px;
+        border-radius: 5px;
+        z-index: 1001;
+        width: 88%;
+    }
 }
 
 /* Start Auth Form */
@@ -320,18 +192,26 @@ button.submit {
     top: 5%;
 }
 
-.error.active {
-    display: block;
+.formContainer.authError{display: none;}
+
+.formContainer .error, 
+.formContainer .authError {
+    position: fixed;
+    width: auto;
+    top: 19%;
+    z-index: 1001;
 }
 
-.formContainer .error {
-    background: rgb(249 236 238);
-    margin: 24px 0 0;
-    padding: 0px 10px 0px;
-    border-radius: 5px;
-    color: #f00;
-    box-shadow: 0 0 3px #333;
-    display: none;
+.signInContainer .error,
+.signInContainer .authError {
+    left: 3%;
+    float: right;
+}
+
+.signUpContainer .error,
+.signUpContainer .authError {
+    right: 3%;
+    float: left;
 }
 
 .formContainer h2 { text-align: center; }
@@ -375,6 +255,7 @@ button.submit {
     margin: 10px;
     position: relative;
     bottom: -4%;
+    cursor: pointer;
 }
 
 .authContainer button.authButton:active {
@@ -401,7 +282,7 @@ form.form {
 	align-items: center;
 	justify-content: center;
 	flex-direction: column;
-	padding: 0 50px;
+	padding: 0 30px;
 	height: 100%;
 	text-align: center;
 }
@@ -420,7 +301,7 @@ form.form {
     max-width: 100%;
     min-height: 530px;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    margin: -20px 0 50px;
+    margin: 20px 0 50px;
 }
 
 .formContainer {
@@ -454,6 +335,8 @@ form.form {
 	border: none;
 	padding: 12px 15px;
 	margin: 8px 0;
+    margin: 0px 10px 10px;
+    top: 0
 }
 
 .signUpContainer{
@@ -536,7 +419,7 @@ form.form {
 	align-items: center;
 	justify-content: center;
 	flex-direction: column;
-	padding: 0 40px;
+	padding: 0 20px;
 	text-align: center;
 	top: 0;
 	height: 100%;
@@ -562,4 +445,61 @@ form.form {
     -o-transform: translateX(0);
 }
 
+.toggleForm {
+    display: none;
+    background: #da5ce6;
+    margin: 0;
+    position: absolute;
+    bottom: 0%;
+    width: 105%;
+    height: 20%;
+    border-radius: 18px;
+    color: #ffffff;
+    background: #ff41c6;
+    background: linear-gradient(to right, #dc2bff, #ff41c6);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 0 0;
+}
+
+.toggleForm h3 {
+    margin-block: 8px;
+}
+
+@media (max-width: 600px) {
+    .authContainer{
+        margin-block: 10px;
+    }
+
+    .formContainer h1 {
+        font-size: 45px;
+        top: 3%;
+    }
+    .formContainer {
+        width: 100%;
+    }
+
+    form.form {
+        padding-inline: 8px;
+    }
+
+    .overlayContainer {
+        display: none;
+    }
+    .signUpContainer {
+        left: 0;
+    }
+    .toggleForm {
+        display: block;
+    }
+    button.authButton {
+        top: -2%;
+    }
+}
+
+@media (min-width: 600px) {
+    form.form, .overlayPanel {
+        padding-inline: 10px;
+    }
+}
 /* End Auth Form */
