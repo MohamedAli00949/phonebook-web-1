@@ -6,16 +6,17 @@ import { MdAdd, MdDelete, MdModeEdit, MdSearch, MdArrowForward } from 'react-ico
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { deleteContact } from "../../actions/contacts";
 import { LOGOUT } from '../../actions/auth';
+import decode from 'jwt-decode';
 
 import logo from '../../phonebook.png';
 
 import useStyles from './styles';
 
 function NavBar(props) {
-    const { addContact, currentId, setCurrentId, handleEditContact, nameAvatar } = props;
+    const { addContact, currentId, setCurrentId, handleEditContact, nameAvatar, results, setResults } = props;
     const [openSearch, setOpenSearch] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
-    const [results, setResults] = useState([]);
+
     const { contacts, isLoading } = useSelector(state => state.contacts);
     const classes = useStyles();
     const dispatch= useDispatch();
@@ -26,7 +27,13 @@ function NavBar(props) {
 
     useEffect(() => {
         if (user) {
+            const decodedToken = decode(user.token);
 
+            if(decodedToken.exp * 1000 < new Date().getTime()) return logout();
+            else if (!decodedToken.exp) {
+                alert('Not valid');
+                localStorage.clear();
+            } 
         }
 
         setUser(JSON.parse(localStorage.getItem('token')));
@@ -35,16 +42,16 @@ function NavBar(props) {
     const logout = async () => {
         dispatch({ type: LOGOUT });
 
-        history.push('/');
+        history.push('/auth');
 
         setUser(null);
     };
 
     const handleChange = async (e) => {
-        const value = e.target.value.toLowerCase();
+        const value = e.target.value?.toLowerCase();
         await setSearchQuery(value);
 
-        const searchResult = contacts.filter(contact => (contact.name.toLowerCase().includes(value) || contact.email.toLowerCase().includes(value) || contact.phones.find(phone => phone.value.toLowerCase().includes(value))));
+        const searchResult = contacts.filter(contact => (contact.name?.toLowerCase().includes(value) || contact.email?.toLowerCase().includes(value) || contact.phones.find(phone => phone.value.toLowerCase().includes(value))));
         await setResults(searchResult);
     }
 

@@ -12,8 +12,9 @@ const AuthForm = () => {
     const [isSignUp, setIsSignUp] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
 
-    const { register, errors, handleSubmit, getValues } = useForm();
+    const { register, reset, errors, handleSubmit, getValues } = useForm();
     const emailPattern = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
     const handleError = () => {
@@ -37,13 +38,19 @@ const AuthForm = () => {
         const { name, email, password } = data;
         const user = { name, email, password };
 
+        await setLoading(true);
+
         if (isSignUp) {
             await dispatch(authForm(user, history, 'signup'))
         }else {
             await dispatch(authForm({ email, password }, history, 'signin'))
         }
 
+        setShowPassword(false);
         await handleError();
+        await setLoading(false);
+
+        reset();
 
     };
 
@@ -55,22 +62,23 @@ const AuthForm = () => {
         const authContainer = document.querySelector('.authContainer');
         authContainer.classList.toggle('right-panel-active');
         setIsSignUp(currentSignUp => !currentSignUp);
+        setError(null)
     }
 
     return (
         <div className="mainContainer">
+            {loading && (<div className="overlay2"></div>)}
             <div className="authContainer">
                 <div className={`formContainer ${signUpOrIn}`}>
                     <form onSubmit={handleSubmit(handleSubmitData)} className="form">
                         {error && (<Error message={error} title="Error" className="authError" />)}
-                        {
-                        isSignUp ? (
+                        {isSignUp ? (
                             <>
                                 <h1>Create Account</h1>
                                 <Input 
                                     className="input" 
                                     name='name' label="Name" 
-                            utoFocus 
+                                    autoFocus 
                                     inputRef={register({required: 'Name is required'})}
                                 />
                                 {errors.name && (<Error message={errors.name.message} className="error" />)}
@@ -91,9 +99,9 @@ const AuthForm = () => {
                             label="Password"  
                             type={ showPassword ? 'text' : 'password' } 
                             handleShowPassword={handleShowPassword}
-                            inputRef={register({ required: 'Password is required', minLength: { value: 8, message: "passwords shouldn't be shorter than 8 characters" }})}
+                            inputRef={register({ required: 'Password is required', minLength: { value: 8, message: "passwords shouldn't be shorter than 8 characters" },})}
                         />
-                        {errors.password && (<Error message={errors.possword?.message} className="error"  />)}
+                        {errors.password && (<Error message={errors.password?.message} className="error"  />)}
                         { isSignUp && (
                             <>
                                 <Input 
@@ -106,12 +114,12 @@ const AuthForm = () => {
                                 {errors.confirmPassword && (<Error message={errors.confirmPassword.message} className="error" />)}
                             </>
                         )}
-                        <button type="submit" className="authButton" title="Submit button" >
-                            { isSignUp ? " Sign Up" : "Sign In"}
+                        <button type="submit" className="authButton" title="Submit button" disabled={loading}>
+                            {loading ? ' Loading...' :  (isSignUp ? " Sign Up" : "Sign In")}
                         </button>
                         <div className="toggleForm">
                             <h3>{isSignUp ? "Already have an acount ?" : "Done't have an account ?"}</h3>
-                            <button className="ghost authButton" onClick={() => {setIsSignUp((signUp) => !signUp); handleShowPassword(false)}} title="Sign In Button">{isSignUp ? "Sign In" : "Sign Up"}</button>
+                            <button className="ghost authButton" onClick={() => {handleShowPassword(false); toggleActiveLogin()}} title="Sign In Button">{isSignUp ? "Sign In" : "Sign Up"}</button>
                         </div>
                     </form>
                 </div>

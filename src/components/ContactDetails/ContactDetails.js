@@ -3,12 +3,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { deletePhone } from '../../actions/phones';
 
 import { MdContentCopy, MdDelete, MdModeEdit, MdAdd } from "react-icons/md";
-import { Avatar, Button, Paper, CircularProgress } from "@material-ui/core";
+import { Avatar, Button, Paper, CircularProgress, Typography } from "@material-ui/core";
 import AddOrEditPhone from './AddOrEditPhone';
 import useStyles from './styles'
 
 const ContactDetails = ({ currentId, handleEditContact, nameAvatar }) => {
-    const contact = useSelector((state) => (currentId ? state.contacts.contacts.find((contact) => contact.id === currentId) : null));
+    const contact = useSelector((state) => (currentId ? state.contacts.contacts.find((contact) => contact.id == currentId) : null));
     const dispatch = useDispatch();
     const classes = useStyles();
     const [addPhone, setAddPhone] = useState(false);
@@ -18,8 +18,8 @@ const ContactDetails = ({ currentId, handleEditContact, nameAvatar }) => {
     const { isLoading } = useSelector((state) => state.contacts);
 
     const getPhoneType = (phone) => {
-        const phoneType = types.data.filter((type) => (type.id === phone?.type_id));
-        return phoneType[0]?.value;
+        const phoneType = types?.data?.find((type) => (type.id === phone?.type_id));
+        return phoneType?.value;
     }
 
     const deletedPhones = phones?.deleted_id;
@@ -40,7 +40,7 @@ const ContactDetails = ({ currentId, handleEditContact, nameAvatar }) => {
 
     return (
         <div className={classes.contactDetails} style={{ background: "#fff"}}>
-            {(currentId !== 0) && (
+            {contact ? (
                 <>
                     <div className={classes.head}>
                         <Avatar {...nameAvatar(contact?.name || contact?.email)} className={classes.bigAvatar}  />
@@ -81,12 +81,18 @@ const ContactDetails = ({ currentId, handleEditContact, nameAvatar }) => {
                         </div>
                     </div>
                     <div className={classes.notes} >
-                        <h3>Notes</h3>
-                        {contact?.notes || (
+                        <h3 style={{ marginBlock: '5px' }}>Notes</h3>
+                        {contact?.notes ? (
+                            <p style={{ marginBlock: '5px' }}>{contact.notes}</p>
+                        ): (
                             <Button className={classes.addNotes} variant="contained" color="primary" size="large" onClick={handleEditContact}><MdAdd />&nbsp; Add notes</Button>
                         )}
                     </div>
                 </>
+            ) : (
+                <Paper elevation={6} className={classes.loadingPaper}>
+                    <Typography>Click at contact to see details of the contact</Typography>
+                </Paper>
             )}
         </div>
     )

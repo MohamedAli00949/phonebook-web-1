@@ -5,12 +5,14 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import NavBar from './components/NavBar/NavBar';
 import AuthForm from './components/AuthForm/AuthForm';
 import Home from './components/Home/Home';
+import ContactForm from './components/Contacts/ContactForm/ContactForm';
 
 const App = () => {
     const [currentId, setCurrentId] = useState(0);
     const [editContact, setEditContact] = useState(false);
     const [addContact, setAddContact] = useState(false);
     const [closeForm, setCloseForm] = useState(false);
+    const [results, setResults] = useState([]);
 
     const handleAddContact = () => {
         setCurrentId(0); 
@@ -57,18 +59,22 @@ const App = () => {
                 <NavBar 
                     addContact={handleAddContact} nameAvatar={nameAvatar}
                     currentId={currentId} setCurrentId={setCurrentId}
-                    handleEditContact={handleEditContact} 
+                    handleEditContact={handleEditContact} results={results} setResults={setResults}
                 />
                 <Switch>
                     <Route path="/" exact component={() => <Home 
                         currentId={currentId} setCurrentId={setCurrentId} nameAvatar={nameAvatar}
-                        handleAddContact={handleAddContact} handleEditContact={handleEditContact} 
-                        setCloseForm={setCloseForm} closeForm={closeForm} addContact={addContact} 
-                        setEditContact={setEditContact} editContact={editContact}
+                        handleAddContact={handleAddContact} handleEditContact={handleEditContact} results={results}
                         />} 
                     />
                     <Route path="/auth" exact component={AuthForm} />
                 </Switch>
+                {((addContact || editContact) && !closeForm) && (
+                    <>
+                        <div className="form-overlay"></div>
+                        <ContactForm currentId={currentId} setCloseForm={setCloseForm} />
+                    </>
+                )}
             </Container>
         </BrowserRouter>
     );

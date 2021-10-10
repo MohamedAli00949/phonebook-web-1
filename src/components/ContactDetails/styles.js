@@ -73,10 +73,13 @@ export default makeStyles(() => ({
         borderRadius: '10px',
         display: 'flex',
         justifyContent: 'space-between',
+        flexDirection: 'column',
+        alignItems: 'center',
     },
     addNotes : {
         width: '150px',
         height: '50px',
+        marginBlock: '10px',
         alignSelf: 'center',
         textTransform: 'capitalize',
     },

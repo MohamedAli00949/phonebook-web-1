@@ -26,6 +26,9 @@ export default makeStyles((theme) => ({
         width: '62%',
         [theme.breakpoints.down('sm')]: {
             width: 'auto',
+            flexFlow: 'wrap',
+            flexWrap: 'wrap',
+            justifyContent: 'space-between',
         },
         fontSize: '15px',
     },
@@ -70,6 +73,10 @@ export default makeStyles((theme) => ({
         zIndex: '100',
         padding: '16px',
         boxShadow: '0px 7px 10px #817878',
+        [theme.breakpoints.down('sm')] : {
+            right: '3%',
+            top: '60%',
+        }
     },
     contact : {
         marginInline: '5px',
@@ -78,12 +85,22 @@ export default makeStyles((theme) => ({
     searchContainer : {
         display: 'flex',
         flexDirection: 'row-reverse',
-        width: 'auto',
-        zIndex: '100',   
+        width: '85%',
+        zIndex: '100',
+        [theme.breakpoints.down('sm')] : {
+            width: '100%',
+        }
     },
     searchArrow : {
         fontSize: '25px',
         background: 'aliceblue',
         marginInline: '8px',
+        [theme.breakpoints.down('sm')] : {
+            marginInline: '2px',
+            position: 'absolute',
+            height: '50%',
+            top: '2%',
+            right: '-2%',
+        }
     },
 }));

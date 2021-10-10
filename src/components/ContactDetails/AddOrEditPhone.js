@@ -68,7 +68,7 @@ function AddOrEditPhone(props) {
                         <TextField style={{backgroundColor: '#fff'}} variant="outlined" name="phone" label="Phone Number" fullWidth value={phoneData.value} onChange={(e) => setPhoneData({ ...phoneData, value: e.target?.value})} autoFocus type="phone-number"  />
                     </div>
                     <div className="phone-types">
-                        <input list="types" placeholder="Enter the type of phone" name="type" id="type" onChange={handleChange} value={getPhoneType(phoneData)} />
+                        <input list="types" placeholder="Enter the type of phone" name="type" id="type" onChange={handleChange} value={getPhoneType(phoneData) || ''} />
                         <datalist id="types">
                             {phoneTypes.map((type) => (
                                 <option value={type.value} key={type.id} />

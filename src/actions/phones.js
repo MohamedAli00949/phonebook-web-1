@@ -46,7 +46,7 @@ export const getTypes = () => async (dispatch) => {
         dispatch({ type: GET_TYPES, data })
     } catch (error) {
         console.error(error);
-        dispatch({ type: PHONE_ERROR, data: error.response.data });
+        dispatch({ type: PHONE_ERROR, data: error.response?.data });
     }
 };
 

@@ -17,8 +17,13 @@ export const authForm = (formData, history, authType) => async (dispatch) => {
         history.push('/')
         console.log('success');
     } catch (error) {
-        const authError = error.response.data;
+        const authError = error.response?.data;
 
-        dispatch({ type: AUTH_ERROR, data: authError });
+        if (authError) {
+            dispatch({ type: AUTH_ERROR, data: authError });
+        } else {
+            dispatch({ type: AUTH_ERROR, data: { message: 'Login error, please try again' } });
+        }
+
     }
 }
