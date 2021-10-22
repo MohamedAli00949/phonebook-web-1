@@ -23,7 +23,7 @@ export default makeStyles((theme) => ({
             left: '0',
             top: '0',
             height: '100%',
-            background: 'rgb(99, 99, 209)',
+            background: 'rgb(255 255 255)',
             padding: '10px',
             zIndex: '100',
         }
@@ -36,6 +36,9 @@ export default makeStyles((theme) => ({
         display: 'none',
         [theme.breakpoints.down('sm')] : {
             display: 'block',
+        },
+        [theme.breakpoints.down('xs')] : {
+            left: '92%',
         }
     }
 }))

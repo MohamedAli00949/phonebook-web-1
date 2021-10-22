@@ -1,6 +1,5 @@
 import axios from "axios";
 // import decode from 'jwt-decode';
-import jwt from 'jsonwebtoken';
 
 const API = axios.create({ baseURL: 'https://phonebook-be.herokuapp.com/api' });
 

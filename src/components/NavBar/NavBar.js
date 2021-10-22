@@ -4,7 +4,6 @@ import { AppBar, Toolbar, Typography, Button, TextField, Paper, Grid } from '@ma
 import Contact from '../Contacts/Contact/Contact'
 import { MdAdd, MdDelete, MdModeEdit, MdSearch, MdArrowForward } from 'react-icons/md';
 import { Link, useHistory, useLocation } from 'react-router-dom';
-import { deleteContact } from "../../actions/contacts";
 import { LOGOUT } from '../../actions/auth';
 import decode from 'jwt-decode';
 
@@ -13,7 +12,7 @@ import logo from '../../phonebook.png';
 import useStyles from './styles';
 
 function NavBar(props) {
-    const { addContact, currentId, setCurrentId, handleEditContact, nameAvatar, searchQuery, setSearchQuery, results, setResults } = props;
+    const { addContact, currentId, setCurrentId, handleEditContact, nameAvatar, searchQuery, setSearchQuery, results, setResults, setShowDeleteContact } = props;
     const [openSearch, setOpenSearch] = useState(false);
 
     const { contacts } = useSelector(state => state.contacts);
@@ -57,16 +56,16 @@ function NavBar(props) {
     return (
         <AppBar className={classes.appBar} position="static" color="inherit">
             <Link to="/" className={classes.brandContainer} >
-                <img src={logo} className={classes.logo} />
+                <img src={logo} className={classes.logo} alt="logo" />
                 <Typography className={classes.heading}>Phonebook</Typography>
             </Link>
             <Toolbar className={classes.toolbar}>
                 {user ? (
                     <>
-                        <div className={classes.searchContainer} style={{ width: openSearch && '85%' }}>
+                        <div className={classes.searchContainer}>
                             {openSearch ? (
                                 <>
-                                    <Button className={classes.searchArrow} color="primary" onClick={() => setOpenSearch(oS => !oS)} size="large" style={{fontSize: "25px"}} ><MdArrowForward /></Button>
+                                    <Button className={classes.searchArrow} color="primary" onClick={() => setOpenSearch(oS => !oS)} size="large" ><MdArrowForward /></Button>
                                     <TextField variant="filled" label="Search" fullWidth value={searchQuery} onChange={handleChange} autoFocus style={{zIndex: '100'}}/>
                                     <Paper className={classes.searchResults}>
                                         {(searchQuery.length !== 0 )? (
@@ -94,7 +93,7 @@ function NavBar(props) {
                         </div>
                         {currentId && !openSearch ? (
                             <>
-                                <Button className={classes.dAEButton} size="large" color="primary" onClick={() => {dispatch(deleteContact(currentId)); setCurrentId(0)}} ><MdDelete />&nbsp; Delete</Button>
+                                <Button className={classes.dAEButton} size="large" color="primary" onClick={() => setShowDeleteContact(true)} ><MdDelete />&nbsp; Delete</Button>
                                 <Button className={classes.dAEButton} size="large" color="primary" onClick={handleEditContact}><MdModeEdit />&nbsp; Edit</Button>
                             </>
                         ) : null}

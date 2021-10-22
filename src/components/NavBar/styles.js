@@ -11,8 +11,11 @@ export default makeStyles((theme) => ({
         padding: '0.7% 2%',
         zIndex: '100',
         [theme.breakpoints.down('sm')]: {
-        flexDirection: 'column',
+            flexFlow: 'wrap',
+            justifyContent: 'center',
         },
+        boxShadow: '0 0 10px #ccc',
+        border: '2px solid #dddcdc',
     },
     heading: {
         color: theme.palette.primary.main,
@@ -26,8 +29,8 @@ export default makeStyles((theme) => ({
         width: '62%',
         [theme.breakpoints.down('sm')]: {
             width: 'auto',
-            flexFlow: 'wrap',
-            flexWrap: 'wrap',
+            flexFlow: 'row',
+            flexDirection: 'row',
             justifyContent: 'space-between',
         },
         fontSize: '15px',
@@ -49,8 +52,11 @@ export default makeStyles((theme) => ({
     dAEButton: {
         margin: '5px',
         padding: "5px",
-        width: "26%",
+        width: "185px",
         textTransform: 'capitalize',
+        [theme.breakpoints.down('sm')] : {
+            display: 'none',
+        }
     },
     addButton : { 
         width: "32%",
@@ -74,8 +80,7 @@ export default makeStyles((theme) => ({
         padding: '16px',
         boxShadow: '0px 7px 10px #817878',
         [theme.breakpoints.down('sm')] : {
-            right: '3%',
-            top: '60%',
+            display: 'none',
         }
     },
     contact : {
@@ -89,7 +94,10 @@ export default makeStyles((theme) => ({
         zIndex: '100',
         [theme.breakpoints.down('sm')] : {
             width: '100%',
-        }
+        },
+        [theme.breakpoints.down('xs')] : {
+            width: '110%',
+        },
     },
     searchArrow : {
         fontSize: '25px',
@@ -97,10 +105,6 @@ export default makeStyles((theme) => ({
         marginInline: '8px',
         [theme.breakpoints.down('sm')] : {
             marginInline: '2px',
-            position: 'absolute',
-            height: '50%',
-            top: '2%',
-            right: '-2%',
         }
     },
 }));

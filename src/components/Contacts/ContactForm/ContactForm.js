@@ -20,9 +20,9 @@ function ContactForm(props) {
     const dispatch = useDispatch();
     const { types } = useSelector((state) => state.phones);
 
-    const { register, errors, handleSubmit, control, reset, getValues } = useForm();
+    const { register, errors, handleSubmit, control, reset } = useForm();
 
-    const { fields, append, remove, insert } = useFieldArray({
+    const { fields, append, remove } = useFieldArray({
         control,
         name: "phones",
         keyName: "pid"

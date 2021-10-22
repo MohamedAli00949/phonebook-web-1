@@ -8,13 +8,12 @@ import AddOrEditPhone from './AddOrEditPhone';
 import useStyles from './styles'
 
 const ContactDetails = ({ currentId, handleEditContact, nameAvatar }) => {
-    const contact = useSelector((state) => (currentId ? state.contacts.contacts.find((contact) => contact.id == currentId) : null));
+    const contact = useSelector((state) => (currentId ? state.contacts.contacts.find((contact) => contact.id === currentId) : null));
     const dispatch = useDispatch();
     const classes = useStyles();
     const [addPhone, setAddPhone] = useState(false);
     const [editPhone, setEditPhone] = useState(false);
     const [phone, setPhone] = useState({});
-    const [phoneId, setPhoneId] = useState(null);
     const { types, phones } = useSelector((state) => state.phones);
 
     const getPhoneType = (phone) => {
@@ -57,7 +56,7 @@ const ContactDetails = ({ currentId, handleEditContact, nameAvatar }) => {
                             <h3>Contact details</h3>
                             <div style={{ display: 'flex', flexFlow: 'column'}}>
                                 {contact?.email ? (<div className={`${classes.email} contact-item`}>
-                                    <MdMailOutline style={{ fontSize: '20px', marginRight: '10px' }} />
+                                    <MdMailOutline style={{ fontSize: '20px', marginRight: '10px', width: '10%' }} />
                                     <h5 className={classes.emailText}>{contact?.email}</h5>
                                     <div className="icon" onClick={() => copyText(contact?.email)}><MdContentCopy /></div>
                                 </div>) : null}
@@ -66,8 +65,8 @@ const ContactDetails = ({ currentId, handleEditContact, nameAvatar }) => {
                                             <MdCall style={{ fontSize: '20px', marginRight: '10px', width: '10%' }} />
                                             <p className={classes.phoneNum}>{phone?.value}</p>
                                             <span className={classes.phoneType}>{getPhoneType(phone)}</span>
-                                            <Button style={{fontSize: '20px', width: '10%'}} onClick={() => {setPhoneId(phone.id); setOpenMenu(o => !o);}}><MdMoreHoriz /></Button>
-                                            {(phone.id === phoneId && openMenu) && (<div className={classes.icons}>
+                                            <Button style={{fontSize: '20px', width: '10%'}} onClick={() => setOpenMenu(o => !o)}><MdMoreHoriz /></Button>
+                                            {openMenu && (<div className={classes.icons}>
                                                 <div className="icon" onClick={() => copyText(phone.value)}><MdContentCopy /></div>
                                                 <div className="icon" onClick={() => deletePhones((phone.id))}><MdDelete /></div>
                                                 <div className="icon" onClick={() => {setEditPhone(eP => !eP); setPhone(phone)}}><MdModeEdit /></div>

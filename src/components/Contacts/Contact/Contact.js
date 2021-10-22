@@ -2,12 +2,11 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { MdDelete, MdModeEdit } from "react-icons/md";
-import { deleteContact } from "../../../actions/contacts";
 import { Avatar, IconButton, Typography } from '@material-ui/core';
 import useStyles from './styles';
 
 const Contact = (props) => {
-    const { contact, setCurrentId, nameAvatar, currentId, handleEditContact } = props;
+    const { contact, setCurrentId, nameAvatar, currentId, handleEditContact, setShowDeleteContact } = props;
     const dispatch = useDispatch();
     const classes = useStyles();
 
@@ -29,7 +28,10 @@ const Contact = (props) => {
             </div>
             <div style={{display: 'flex'}}>
                 <IconButton className={`${classes.iconE} contact-icon`} onClick={handleEditContact} color="primary" ><MdModeEdit /></IconButton>
-                <IconButton className={`${classes.iconD} contact-icon`} onClick={() => {dispatch(deleteContact(contact.id)); {contact.id === currentId ? setCurrentId(null) : null};}} ><MdDelete /></IconButton>
+                <IconButton className={`${classes.iconD} contact-icon`} onClick={() => setShowDeleteContact(true)} color="secondary" ><MdDelete /></IconButton>
+            </div>
+            <div>
+                
             </div>
         </div>
     )

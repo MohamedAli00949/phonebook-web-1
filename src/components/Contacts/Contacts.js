@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import useStyles from './styles';
 import { useSelector } from 'react-redux';
 import { MdAdd } from 'react-icons/md';
@@ -7,7 +7,7 @@ import { Typography, Button, Grid, Paper, CircularProgress } from "@material-ui/
 import Contact from './Contact/Contact';
 
 const Contacts = (props) => {
-    const { currentId, setCurrentId, handleAddContact, nameAvatar, handleEditContact, searchQuery, results } = props;
+    const { currentId, setCurrentId, handleAddContact, nameAvatar, handleEditContact, searchQuery, results, setShowDeleteContact } = props;
     const { contacts, isLoading } = useSelector((state) => state.contacts);
     const classes = useStyles();
 
@@ -30,10 +30,10 @@ const Contacts = (props) => {
                 {searchQuery.length > 0 ? (
                     <>
                         {results?.map((contact) => (
-                            <Grid item key={contact.id} xs={12} md={11}>
+                            <Grid item key={contact.id} xs={12} md={12}>
                                 <Contact 
                                     handleEditContact={handleEditContact} 
-                                    key={contact.id} currentId={currentId} 
+                                    key={contact.id} currentId={currentId} setShowDeleteContact={setShowDeleteContact}
                                     nameAvatar={nameAvatar} contact={contact} setCurrentId={setCurrentId} 
                                 />
                             </Grid>
@@ -44,14 +44,14 @@ const Contacts = (props) => {
                     </>
                 ) : (
                     <>
-                        <Grid item xs={12} sm={12} md={11} className="contact">
+                        <Grid item xs={12} sm={12} md={12}>
                             <Button variant="contained" color="primary" fullWidth onClick={handleAddContact}><MdAdd />&nbsp;Add Contact</Button>
                         </Grid>
                         {contacts.map((contact) => (
-                            <Grid item key={contact.id} xs={12} md={11}>
+                            <Grid item key={contact.id} xs={12} md={12}>
                                 <Contact 
                                     handleEditContact={handleEditContact} 
-                                    key={contact.id} currentId={currentId} 
+                                    key={contact.id} currentId={currentId} setShowDeleteContact={setShowDeleteContact}
                                     nameAvatar={nameAvatar} contact={contact} setCurrentId={setCurrentId} 
                                 />
                             </Grid>
