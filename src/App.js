@@ -9,6 +9,7 @@ import ContactForm from './components/Contacts/ContactForm/ContactForm';
 import { useDispatch, useSelector } from 'react-redux';
 import { getContacts, CONTACT_ERROR, START_LOADING, FETCH_CONTACTS, END_LOADING, deleteContact } from './actions/contacts';
 import { getTypes } from './actions/phones';
+import PageNotFound from './components/PageNotFound/PageNotFound';
 
 const App = () => {
     const [currentId, setCurrentId] = useState(null);
@@ -96,6 +97,7 @@ const App = () => {
                         />} 
                         />
                     <Route path="/auth" exact component={AuthForm} />
+                    <Route exact component={PageNotFound} />
                 </Switch>
                 {((addContact || editContact) && !closeForm) && (
                     <>

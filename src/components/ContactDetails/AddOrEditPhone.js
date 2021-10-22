@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { TextField, Button } from '@material-ui/core';
 import { AiOutlineCloseCircle } from 'react-icons/ai';
 import { updatePhone, createPhone, UPDATE_PHONE, CREATE_PHONE, PHONE_ERROR } from '../../actions/phones';
+import { UPDATE_CONTACT } from '../../actions/contacts'
 import useStyles from './styles';
 
 function AddOrEditPhone(props) {
@@ -12,16 +13,19 @@ function AddOrEditPhone(props) {
     const classes = useStyles();
     const [phoneData, setPhoneData] = useState({ type_id: 1, value: '',  });
     const { types } = useSelector((state) => state.phones);
+    const contact = useSelector((state) => state.contacts.contacts.find(contact => contact.id === contactId));
 
     const phoneTypes = types.data;
 
     useEffect(() => {
-        if (editPhone) {
-            setPhoneData(phone);
-        } else {
-            setPhoneData({ type_id: 1, value: '',  });
+        if (contactId) {
+            if (editPhone) {
+                setPhoneData(phone);
+            } else {
+                setPhoneData({ type_id: 1, value: '',  });
+            }
         }
-    }, [editPhone]);
+    }, [editPhone, contactId]);
 
     const handleChange = (e) => {
         const typeValue = e.target.value;
@@ -48,24 +52,12 @@ function AddOrEditPhone(props) {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        try {
-
-            
-        } catch (error) {
-            console.error(error);
-            dispatch({ type: PHONE_ERROR, data: error.response?.data });
-        }
-        try {
-    
-            
-        } catch (error) {
-        }
-
         if (editPhone) {
             await updatePhone(phone.id, { value: phoneData.value, type_id: phoneData.type_id })
                 .then((response) => {
                     dispatch({ type: UPDATE_PHONE, data : response});
                     setPhone(phoneData);
+                    dispatch({ type: UPDATE_CONTACT, data: { data: contact } });
                 })
                 .catch((error) => {
                     console.error(error);
@@ -76,6 +68,7 @@ function AddOrEditPhone(props) {
                 .then((response) => {
                     dispatch({ type: CREATE_PHONE, data : response });
                     setPhone(phoneData);
+                    dispatch({ type: UPDATE_CONTACT, data: { data: contact } });
                 })
                 .catch((error) => {
                     console.error(error);

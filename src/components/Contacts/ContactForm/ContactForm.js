@@ -103,7 +103,7 @@ function ContactForm(props) {
             );
 
             updatedPhones.forEach(({ id, ...phone }) => 
-                promises.push(updatePhone(phone.id, phone))
+                promises.push(updatePhone(id, phone))
             );
 
             await delete contactData.phones;
