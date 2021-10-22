@@ -6,37 +6,22 @@ export const DELETE_PHONE = 'DELETE_PHONE';
 export const GET_TYPES = 'GET_TYPES';
 export const PHONE_ERROR = 'PHONE_ERROR';
 
-export const createPhone = (phone) => async (dispatch) => {
-    try {
-        const { data } = await api.createPhone(phone);
+export const createPhone = async (phone) => {
+    const { data } = await api.createPhone(phone);
 
-        dispatch({ type: CREATE_PHONE, data })
-    } catch (error) {
-        console.error(error);
-        dispatch({ type: PHONE_ERROR, data: error.response?.data });
-    }
+    return data;
 };
 
-export const updatePhone = (id, phone) => async (dispatch) => {
-    try {
-        const { data } = await api.updatePhone(id, phone);
+export const updatePhone = async (id, phone) => {
+    const { data } = await api.updatePhone(id, phone);
 
-        dispatch({ type: UPDATE_PHONE, data });
-    } catch (error) {
-        console.error(error);
-        dispatch({ type: PHONE_ERROR, data: error.response?.data });
-    }
+    return data;
 };
 
-export const deletePhone = (id) => async (dispatch) => {
-    try {
-        const { data } = await api.deletePhone(id);
+export const deletePhone = async (id) => {
+    const { data } = await api.deletePhone(id);
 
-        dispatch({ type: DELETE_PHONE, data });
-    } catch (error) {
-        console.error(error);
-        dispatch({ type: PHONE_ERROR, data: error.response?.data });
-    }
+    return data;
 };
 
 export const getTypes = () => async (dispatch) => {

@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
 import { Input, Error } from './Input';
 import { authForm } from '../../actions/auth'
 import { useForm } from 'react-hook-form';
+import { CircularProgress } from "@material-ui/core";
 
 const AuthForm = () => {
     const dispatch = useDispatch();
@@ -41,9 +42,9 @@ const AuthForm = () => {
         await setLoading(true);
 
         if (isSignUp) {
-            await dispatch(authForm(user, history, 'signup'))
+            dispatch(authForm(user, history, 'signup'))
         }else {
-            await dispatch(authForm({ email, password }, history, 'signin'))
+            dispatch(authForm({ email, password }, history, 'signin'))
         }
 
         setShowPassword(false);
@@ -67,7 +68,10 @@ const AuthForm = () => {
 
     return (
         <div className="mainContainer">
-            {loading && (<div className="overlay2"></div>)}
+            {loading && (<>
+                <CircularProgress size="4em" />
+                <div className="overlay2"></div>
+            </>)}
             <div className="authContainer">
                 <div className={`formContainer ${signUpOrIn}`}>
                     <form onSubmit={handleSubmit(handleSubmitData)} className="form">

@@ -3,14 +3,14 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { TextField, Button } from '@material-ui/core';
 import { AiOutlineCloseCircle } from 'react-icons/ai';
-import { updatePhone, createPhone } from '../../actions/phones';
+import { updatePhone, createPhone, UPDATE_PHONE, CREATE_PHONE } from '../../actions/phones';
 import useStyles from './styles';
 
 function AddOrEditPhone(props) {
     const { editPhone, contactId, phone, setAddPhone, setEditPhone, setPhone } = props;
     const dispatch = useDispatch();
     const classes = useStyles();
-    const [phoneData, setPhoneData] = useState({ type_id: 0, value: '',  });
+    const [phoneData, setPhoneData] = useState({ type_id: 1, value: '',  });
     const { types } = useSelector((state) => state.phones);
 
     const phoneTypes = types.data;
@@ -19,7 +19,7 @@ function AddOrEditPhone(props) {
         if (editPhone) {
             setPhoneData(phone);
         } else {
-            setPhoneData({ type_id: 0, value: '',  });
+            setPhoneData({ type_id: 1, value: '',  });
         }
     }, [editPhone]);
 
@@ -42,18 +42,45 @@ function AddOrEditPhone(props) {
             setAddPhone(aP => !aP);
         }
 
-        setPhoneData({ type_id: 0, value: '',  });
+        setPhoneData({ type_id: 1, value: '',  });
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        try {
+
+            
+        } catch (error) {
+            console.error(error);
+            dispatch({ type: PHONE_ERROR, data: error.response?.data });
+        }
+        try {
+    
+            
+        } catch (error) {
+        }
+
         if (editPhone) {
-            await dispatch(updatePhone(phone.id, { value: phoneData.value, type_id: phoneData.type_id }));
-            await setPhone(phoneData);
+            await updatePhone(phone.id, { value: phoneData.value, type_id: phoneData.type_id })
+                .then((response) => {
+                    dispatch({ type: UPDATE_PHONE, data : response});
+                    setPhone(phoneData);
+                })
+                .catch((error) => {
+                    console.error(error);
+                    dispatch({ type: PHONE_ERROR, data: error.response?.data });
+                });
         } else {
-            await dispatch(createPhone({ ...phoneData, contact_id: contactId}));
-            await setPhone(phoneData);
+            await createPhone({ ...phoneData, contact_id: contactId})
+                .then((response) => {
+                    dispatch({ type: CREATE_PHONE, data : response });
+                    setPhone(phoneData);
+                })
+                .catch((error) => {
+                    console.error(error);
+                    dispatch({ type: PHONE_ERROR, data: error.response?.data });
+                });
         }
 
         close();

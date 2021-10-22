@@ -1,13 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import useStyles from './styles';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { MdAdd } from 'react-icons/md';
 import { Typography, Button, Grid, Paper, CircularProgress } from "@material-ui/core";
 
 import Contact from './Contact/Contact';
 
 const Contacts = (props) => {
-    const { currentId, setCurrentId, handleAddContact, nameAvatar, handleEditContact, contacts, isLoading, results } = props;
+    const { currentId, setCurrentId, handleAddContact, nameAvatar, handleEditContact, searchQuery, results } = props;
+    const { contacts, isLoading } = useSelector((state) => state.contacts);
     const classes = useStyles();
 
     if (!contacts?.length && !isLoading) {
@@ -25,25 +26,36 @@ const Contacts = (props) => {
                 <CircularProgress size="7em" />
             </Paper>
         ) : (
-            <Grid container direction="column-reverse" justifyContent="center" alignItems="stretch">
-                {results.length > 0 ? (
+            <Grid container direction="column" justifyContent="center" alignItems="stretch">
+                {searchQuery.length > 0 ? (
                     <>
                         {results?.map((contact) => (
-                            <Grid onClick={() => setCurrentId(contact.id)} item key={contact.id} xs={12} md={11}>
-                                <Contact nameAvatar={nameAvatar} contact={contact} setCurrentId={setCurrentId} key={contact.id} currentId={currentId} handleEditContact={handleEditContact} />
+                            <Grid item key={contact.id} xs={12} md={11}>
+                                <Contact 
+                                    handleEditContact={handleEditContact} 
+                                    key={contact.id} currentId={currentId} 
+                                    nameAvatar={nameAvatar} contact={contact} setCurrentId={setCurrentId} 
+                                />
                             </Grid>
                         ))}
+                        {(results?.length === 0 && searchQuery.length !== 0) && (
+                            <Typography variant="h4" color="error">No results found.</Typography>
+                        )}
                     </>
                 ) : (
                     <>
-                        {contacts.map((contact) => (
-                            <Grid onClick={() => setCurrentId(contact.id)} item key={contact.id} xs={12} md={11}>
-                                <Contact nameAvatar={nameAvatar} contact={contact} setCurrentId={setCurrentId} key={contact.id} currentId={currentId} handleEditContact={handleEditContact} />
-                            </Grid>
-                        ))}
                         <Grid item xs={12} sm={12} md={11} className="contact">
                             <Button variant="contained" color="primary" fullWidth onClick={handleAddContact}><MdAdd />&nbsp;Add Contact</Button>
                         </Grid>
+                        {contacts.map((contact) => (
+                            <Grid item key={contact.id} xs={12} md={11}>
+                                <Contact 
+                                    handleEditContact={handleEditContact} 
+                                    key={contact.id} currentId={currentId} 
+                                    nameAvatar={nameAvatar} contact={contact} setCurrentId={setCurrentId} 
+                                />
+                            </Grid>
+                        ))}
                     </>
                 )}
             </Grid>
@@ -51,10 +63,4 @@ const Contacts = (props) => {
     )
 }
 
-const mapStateToProps = (state, { currentId, setCurrentId, handleAddContact, nameAvatar, handleEditContact }) => {
-    const { contacts, isLoading } = state.contacts;
-
-    return { contacts, isLoading, currentId, setCurrentId, handleAddContact, handleEditContact, nameAvatar };
-};
-
-export default connect(mapStateToProps)(Contacts);
+export default Contacts;

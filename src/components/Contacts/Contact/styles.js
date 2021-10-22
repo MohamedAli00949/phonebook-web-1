@@ -37,6 +37,15 @@ export default makeStyles((theme) => ({
         color: '#3f51b5',
         visibility: 'hidden',
     },
+    moreButton : {
+        padding: '14px',
+        margin: '0px',
+        fontSize: '24px',
+        display: 'none',
+        [theme.breakpoints.down('sm')] : {
+            display: 'block',
+        }
+    }
 }))
 
 

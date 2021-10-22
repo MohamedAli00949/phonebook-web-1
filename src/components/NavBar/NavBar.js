@@ -13,11 +13,10 @@ import logo from '../../phonebook.png';
 import useStyles from './styles';
 
 function NavBar(props) {
-    const { addContact, currentId, setCurrentId, handleEditContact, nameAvatar, results, setResults } = props;
+    const { addContact, currentId, setCurrentId, handleEditContact, nameAvatar, searchQuery, setSearchQuery, results, setResults } = props;
     const [openSearch, setOpenSearch] = useState(false);
-    const [searchQuery, setSearchQuery] = useState('');
 
-    const { contacts, isLoading } = useSelector(state => state.contacts);
+    const { contacts } = useSelector(state => state.contacts);
     const classes = useStyles();
     const dispatch= useDispatch();
     const history = useHistory();
@@ -54,8 +53,6 @@ function NavBar(props) {
         const searchResult = contacts.filter(contact => (contact.name?.toLowerCase().includes(value) || contact.email?.toLowerCase().includes(value) || contact.phones.find(phone => phone.value.toLowerCase().includes(value))));
         await setResults(searchResult);
     }
-
-
 
     return (
         <AppBar className={classes.appBar} position="static" color="inherit">
@@ -105,11 +102,13 @@ function NavBar(props) {
                         <Button variant="contained" className={classes.logout} color="secondary" fullWidth onClick={logout}>Logout</Button>
                     </>
                     ) : (
-                    <Button varient="contained" component={Link} to="/auth" className={classes.signin} variant="contained" color="primary">Login</Button>
+                    <>
+                        <Button varient="contained" component={Link} to="/auth" className={classes.signin} variant="contained" color="primary">Login</Button>
+                    </>
                 )}
             </Toolbar>
         </AppBar>
     );
 };
 
-export default NavBar
+export default NavBar;

@@ -1,11 +1,15 @@
 import { makeStyles } from '@material-ui/core'
 
-export default makeStyles(() => ({
+export default makeStyles((theme) => ({
     contactDetails: {
         backgroundColor: '#ffffff',
         padding: '10px',
-        borderRadius: '5px',
+        borderRadius: '10px',
         boxShadow: '0 0 6px 3px #0000006b',
+        [theme.breakpoints.down('sm')] : {
+            boxShadow: '0 0 10px #000',
+        },
+        marginBlock: '10px',
     },
     head: {
         display: 'flex',
@@ -44,25 +48,35 @@ export default makeStyles(() => ({
         height: "1px",
         background: "#ccd",
     },
-    contactDetails: {
+    detailsContainer : {
+        maxHeight: '460px',
+        overflowY: 'auto',
+        paddingInline: '5px',
+    },
+    details: {
         padding: '10px',
         border: '2px solid #dadce0',
         borderRadius: '10px',
-        marginBlock: '20px',
+        marginBlock: '10px',
     },
     email: {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: "space-between",
-        marginInline: "1%",
-        paddingInline: "2%",
+        marginInline: "0",
+        paddingInline: "4px",
         borderRadius: "8px",
+        width: '47%',
+        float: 'left',
+        alignItems: 'center',
+        padding: '8px',
     },
     emailText : {
         maxWidth: '520px',
         width: '80%',
-        marginLeft: '20px',
-        marginBlock: '10px',
+        marginLeft: '5px',
+        marginBlock: '5px',
+        color: '#5c5cff',
     },
     notes : {
         background: '#ffffff',
@@ -85,10 +99,12 @@ export default makeStyles(() => ({
     },
     phones : {
         display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+        flexDirection: 'column',
+        justifyContent: 'center',
         marginBlock: '10px',
         paddingInline: '14px',
+        width: '53%',
+        alignSelf: 'center',
     },
     phonesTitle: {
         fontFamily: 'sans-serif',
@@ -96,25 +112,35 @@ export default makeStyles(() => ({
         margin: '0',
         textTransform: 'capitalize',
         width: 'auto',
-        textAlign: 'center',
+        textAlign: 'start',
         fontSize: '24px',
         marginInline: '6px',
+        maxHeight: '122px',
+        overflowX: 'auto',
     },
     phonesList : {
+        alignItems: 'center',
+        alignSelf: 'start',
+        maxHeight: '115px',
+        background: '#dddddd42',
+        borderRadius: '10px',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        width: '58%',
-        marginInline: '2%',
+        width: '100%',
+        marginInline: '6px',
         marginBlock: '10px',
+        overflowX: 'clip',
+        overflowY: 'auto',
+        width: 'auto',
     },
     phone: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-between',
         borderRadius: '10px',
-        marginBlock: '10px',
+        marginBlock: '2px',
         padding: '8px',
+        width: '50%',
     },
     phoneNum : {
         margin: '0',
@@ -132,6 +158,8 @@ export default makeStyles(() => ({
         textTransform: 'capitalize',
         height: '45px',
         padding: '5px',
+        alignSelf: 'center',
+        marginInline: '6px',
     },
     overlay: {
         background: '#000000a6',
@@ -170,5 +198,11 @@ export default makeStyles(() => ({
         height: '39vh',
         margin: '20px'
     },
+    icons : {
+        width: '34%',
+        position: 'relative',
+        left: '2%',
+        float: 'left',
+    }
 }))
 

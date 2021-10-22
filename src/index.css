@@ -21,7 +21,7 @@ ul {
 
 .contact {
     background: white;
-    padding: 10px;
+    padding: 6px;
     box-shadow: 0 0 4px #333;
     margin-block: 2px;
     display: flex;
@@ -34,7 +34,6 @@ ul {
 }
 
 .contact-item {
-    margin-inline: 1%;
     padding-inline: 2%;
     border-radius: 5%;
     align-items: center;
@@ -60,7 +59,11 @@ ul {
     margin-block: 16px;
 }
 
-
+.phones-fields {
+    padding: 2px;
+    max-height: 230px;
+    overflow-y: auto;
+}
 
 .contact-item:hover {
     background: #cecece61;
@@ -165,10 +168,11 @@ button.submit {
     padding: 15px;
     margin-block: 1%;
     margin-inline: 1%;
-    background: #dadada;
-    color: #909090;
     border-radius: 6px;
     border: 2px solid #909090;
+    background-color: transparent; 
+    color: #333333e0; 
+    margin-top: 0px; font-size: 19px;
 }
 
 .contact-form .close {

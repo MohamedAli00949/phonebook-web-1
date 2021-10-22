@@ -1,43 +1,39 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useState } from 'react';
 
-import { getContacts } from '../../actions/contacts';
-import { getTypes } from '../../actions/phones';
 import Contacts from '../Contacts/Contacts';
 import ContactDetails from '../ContactDetails/ContactDetails';
-import { Grow, Container, Grid, Paper, Typography } from '@material-ui/core';
+import { Grow, Container, Grid, Paper, Typography, IconButton } from '@material-ui/core';
+import { IoClose } from 'react-icons/io5'
 import { Link } from 'react-router-dom';
 import useStyles from './styles'
 
 const Home = (props) => {
-    const { currentId, setCurrentId, 
-        handleAddContact, handleEditContact, nameAvatar, results
+    const { currentId, setCurrentId, handleAddContact, 
+        handleEditContact, nameAvatar, results, searchQuery
     } = props;
-    // const [isLoading, setIsloading] = useState(false);
-    const dispatch = useDispatch();
     const classes = useStyles();
 
     const user = JSON.parse(localStorage.getItem('token'));
-
-    useEffect(() => {
-        if(user) {
-            dispatch(getContacts());
-            dispatch(getTypes());
-        }
-    }, [user, dispatch]);
 
     return (
         <Grow in>
             <Container className={classes.mainContainer} maxWidth="xl">
                 {user ? (
-                        <Grid container spacing={0.5} justify="space-between" alignItems="stretch" className={classes.container}>
-                            <Grid item xs={12} md={4}>
-                                <Contacts results={results} nameAvatar={nameAvatar} setCurrentId={setCurrentId} currentId={currentId} handleAddContact={handleAddContact} handleEditContact={handleEditContact} />
-                            </Grid>
-                            <Grid item xs={12} md={8} className="details">
+                    <Grid container spacing={0.5} justify="space-between" alignItems="stretch" className={classes.container}>
+                        <Grid item xs={12} md={4} /*style={{ display: ((window.outerHeight < 960 && currentId)) ? 'none' : 'block' }}*/ className={classes.contacts}>
+                            <Contacts 
+                                results={results} nameAvatar={nameAvatar} searchQuery={searchQuery}
+                                setCurrentId={setCurrentId} currentId={currentId}
+                                handleAddContact={handleAddContact} handleEditContact={handleEditContact} 
+                            />
+                        </Grid>
+                        {(currentId  && window.outerHeight < 960) ? (
+                            <Grid item xs={12} md={8} className={currentId ? classes.details : null} style={{ paddingInline: '4px' }}>
+                                {currentId ? (<IconButton className={classes.close} onClick={() => setCurrentId(null)}><IoClose /></IconButton>) : null}
                                 <ContactDetails nameAvatar={nameAvatar} currentId={currentId} handleEditContact={handleEditContact} />
                             </Grid>
-                        </Grid>
+                        ) : null}
+                    </Grid>
                 ) : (
                     <Paper elevation={6} className='no-contacts'>
                         <Typography variant="h6" align="center">

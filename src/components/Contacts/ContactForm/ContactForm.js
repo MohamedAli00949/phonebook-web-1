@@ -1,241 +1,257 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Button, TextField } from '@material-ui/core';
-import { useForm } from 'react-hook-form';
+import { Button, TextField, IconButton, CircularProgress } from '@material-ui/core';
+import { useForm, useFieldArray } from 'react-hook-form';
 
 import { AiOutlineCloseCircle } from 'react-icons/ai';
 import { MdAdd } from 'react-icons/md';
 
-import { createContact, updateContact } from '../../../actions/contacts';
+import { createContact, updateContact, UPDATE_CONTACT, CREATE_CONTACT, CONTACT_ERROR } from '../../../actions/contacts';
 import { createPhone, updatePhone, deletePhone } from '../../../actions/phones';
 
 function ContactForm(props) {
     const { currentId, setCloseForm } = props;
-    const [ contactData, setContactData ] = useState({ email: '', name: '', notes: '', phones: [] });
-    const [phoneData, setPhoneData] = useState({ type_id: 0, value: '', id: 1, phone_id: 1 });
+    const [contactData, setContactData] = useState({ email: '', name: '', notes: '', phones: [] });
     const [noChange, setNoChange] = useState(true);
-    const [phones, setPhones] = useState([]);
+    const [phones2, setPhones2] = useState([]);
+    const [deletedPhones, setDeletedPhones] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
     const contact = useSelector((state) => state.contacts.contacts.find(contact => contact.id === currentId));
     const dispatch = useDispatch();
     const { types } = useSelector((state) => state.phones);
 
-    const { register, errors, handleSubmit } = useForm();
+    const { register, errors, handleSubmit, control, reset, getValues } = useForm();
+
+    const { fields, append, remove, insert } = useFieldArray({
+        control,
+        name: "phones",
+        keyName: "pid"
+    });
+
     const emailPattern = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
     const phonePattern = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,9}$/;
 
     const phoneTypes = types?.data;
 
-    // This Function For Handleing the Change At The Type of Phone.
-    const handleChangeType = (e) => {
-        const typeValue = e.target?.value;
-        const typeId = phoneTypes.filter((type) => (type.value === typeValue));
-        return setPhoneData({ ...phoneData, type_id: typeId[0]?.id});
-    };
-
-    //This Function For Getting the Phone Type Value.
-    const getPhoneType = (phone) => {
-        const phoneType = phoneTypes?.find((type) => (type.id === phone?.type_id));
-        return phoneType?.value;
-    };
-
     // This Function For Clearing the Contact Data.
     const clear = () => {
         setContactData({ email: '', name: '', notes: '', phones: [] });
         setCloseForm(true);
-        setShowMenu(false);
-        setAddPhone(false);
+        reset({ phones: [] });
     }
 
-    
+
     useEffect(() => {
         if (contact) {
-            if (!contact.phones[0]) {
-                setPhones([]);
-            }else {
-                setPhones(contact.phones);
+            if (contact.phones.length === 0) {
+                append({ value: "", type_id: 1 });
+            } else {
+                append(contact.phones);
+                console.log(contact.phones);
+                setPhones2(contact.phones);
             }
 
             setContactData({ email: contact.email, name: contact.name, notes: contact.notes, phones: [] });
-
-            console.log(contactData, phones);
+        } else {
+            append({ value: "", type_id: 1 });
         }
     }, [contact]);
 
-    const handleSubmitData = async () => {
+    const handleSubmitData = async ({ phones, ...data }) => {
+        await console.log('phones', phones, 'deleteed phones : ', deletedPhones);
 
-        const phone = phones.find(phone => (phone.value === phoneData.value && phone.type_id === phoneData.type_id));
-        
-        if (phoneData.value && phoneData.type_id && !phone) {
-            phones.push(phoneData);
-        }
+        await phones?.forEach((phone, index) => {
+            phone.id = phones2[index]?.id;
+        })
+
+        const oldPhones = [];
+
+        const newPhones = [];
+
+        phones?.forEach((phone) => {
+            {phone.id ? oldPhones.push(phone) : newPhones.push(phone)}
+        });
+
+        console.log("New Phones", newPhones, "oldPhones", oldPhones);
 
         if (contact) {
-            await delete contactData.phones;
-            if (!contactData.notes) {
+            if (data.name && data.name !== contact?.name) contactData.name = data.name;
+            if (data.email && data.email !== contact.email) contactData.email = data.email;
+            if (data.notes && data.notes !== contact.notes) contactData.notes = data.notes;
+
+            if (!data.notes) {
                 await delete contactData.notes;
             }
 
-            if (!contactData.email) {
+            if (!data.email) {
                 await delete contactData.email;
             }
-            dispatch(updateContact(contact.id, contactData))
-            if(!phoneData.value) {
-                const afterDelete = phones.filter(phone => phone.id !== phoneData.id);
-                await setPhones(afterDelete);
-            }
-            phones.map((phone) => {
-                if (phone.value !== '') {
-                    if (phone.type_id === 0) {
-                        if(phone.phone_id === phone.id ) {
-                            dispatch(createPhone({ value: phone.value, contact_id: contact.id}));
-                        } else { 
-                            dispatch(updatePhone(phone.id, { value: phone.value }));
-                        }
-                    } else {
-                        if(phone.phone_id === phone.id ) {
-                            dispatch(createPhone({ value: phone.value, type_id: phone.type_id, contact_id: contact.id}));
-                        } else { 
-                            dispatch(updatePhone(phone.id, { value: phone.value, type_id: phone.type_id }));
-                        }
-                    }
-                }
+
+            const updatedPhones = oldPhones.filter(({ value, type_id, id }) => {
+                const exist = phones2.find(p => p.id = id);
+
+                if (value !== exist.value || type_id !== exist.type_id) return true;
+                return false;
             })
 
-            if ( phoneData.id !== phoneData.phone_id && contact && phoneData.value === '') {
-                dispatch(deletePhone(phoneData.id))
-            }
+            const promises = [];
+
+            deletedPhones.forEach((p) => deletePhone(p.id));
+
+            newPhones?.forEach((phone) => 
+                promises.push(createPhone({ contact_id: contact.id, ...phone}))
+            );
+
+            updatedPhones.forEach(({ id, ...phone }) => 
+                promises.push(updatePhone(phone.id, phone))
+            );
+
+            await delete contactData.phones;
+
+            setIsLoading(true);
+
+            Promise.all(promises).then(() => {
+                updateContact(currentId, contactData)
+                    .then((response) => {
+                        if (contact) {
+                            contact.phones = contact.phones.filter((phone) => {
+                                return !deletedPhones?.includes(phone);
+                            })
+                        }
+
+                        dispatch({ type: UPDATE_CONTACT, data: response });
+                        setIsLoading(false);
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                        dispatch({ type: CONTACT_ERROR, data: error.response.data });
+                        setIsLoading(false);
+                    })
+            })
         } else {
-            await phones?.map((phone) => {
-                delete phone.id;
-                delete phone.phone_id;
-                {phone.type_id ===  0 ?   delete phone.type_id: null}
-            });
-            const realPhones = phones.filter((phone) => phone.value !== '' || phone.type_id !== 0);
-            
+            if (data.name) {
+                contactData.name = data.name;
+            } else {
+                delete contactData.name;
+            };
+
+            if (data.email) {
+                contactData.email = data.email
+            } else {
+                delete contactData.email;
+            };
+
+            if (data.notes) {
+                contactData.notes = data.notes
+            } else {
+                delete contactData.notes;
+            };
+
+            const realPhones = newPhones.filter((phone) => phone.value || phone.type_id);
             await realPhones.map((phone) => setContactData({ ...contactData, phone: contactData.phones.push(phone) }));
 
-            if (!contactData.email) {
-                await delete contactData.email; 
-            }
+            await setIsLoading(true);
 
-            if (!contactData.notes) {
-                await delete contactData.notes;
-            } 
-
-            if (!contactData.name) {
-                await delete contactData.name;
-            }
-
-            await dispatch(createContact(contactData));
+            await createContact(contactData)
+                .then((response) => {
+                    dispatch({ type: CREATE_CONTACT, data: response.contact });
+                })
+                .catch((error) => {
+                    console.log(error);
+                    dispatch({ type: CONTACT_ERROR, data: error.response?.data });
+                    setIsLoading(false);
+                })
         }
+
+        await console.log('contact data', contactData, 'data', data, 'phones', phones);
 
         clear();
     };
 
-    const handleChange = (e) => {
-        setContactData({ ...contactData, [e.target.name] : e.target.value });
-        setNoChange(false);
-    };
-
-    
-    const selectPhones = async (e) => {
-        const phone = phones.find(phone => phone.value == e.target?.value);
-        const oldPhone = phones.find(phone => phone.id == phoneData.id);
-        {phoneData.value && phoneData?.type_id && !oldPhone ? phones.push(phoneData) : setPhoneData({ value: phone?.value, type_id: phone?.type_id, id: phone?.id })};
-
-        if(oldPhone && oldPhone.value !== phoneData.value && phoneData.value) {
-            oldPhone.value = phoneData?.value;
+    const removePhones = async (index) => {
+        await remove(index);
+        const phone = phones2[index];
+        if (phone?.id) {
+            await setDeletedPhones([...deletedPhones, phone]);
+            const afterDelete = phones2.filter((p) => p.id !== phone.id)
+            setPhones2(afterDelete);
+            setNoChange(false);
         }
-
-        if(!phoneData.value) {
-            const afterDelete = phones.filter(phone => phone.id !== phoneData.id);
-            await setPhones(afterDelete);
-            await console.log(afterDelete, phones);
-        }
-
-        setNoChange(false);
-    }
-
-    const addPhones = async () => {
-        const phone = phones.find(phone => phone.id == phoneData.id);
-
-        if (!phone) {
-            phones.push(phoneData)
-        } else if(phone?.value !== phoneData?.value) {
-            phone.value = phoneData?.value;
-        }
-
-        await console.log(phoneData, phones) 
-        await setPhoneData({ type_id: 0, value: '', id: phones.length + 1, phone_id: contact ? phones.length + 1 : null });
+        await console.log(phone, deletedPhones);
     }
 
     return (
-        <div className="contact-form">
-            <Button className="close" onClick={clear}><AiOutlineCloseCircle /></Button>
-            <form autoComplete="off" onSubmit={handleSubmit(handleSubmitData)}>
-                <TextField 
-                    className='input' name="name" 
-                    variant="filled" label="Name" fullWidth
-                    onChange={handleChange} value={contactData.name}
-                    inputRef={register({required: 'Name is required'})}
-                />
-                {errors.name && (<span className='contact-error'>{errors.name.message}</span>)}
-                <TextField 
-                    className='input' name="email" 
-                    variant="filled" label="Email" fullWidth 
-                    onChange={handleChange} value={contactData.email}
-                    inputRef={register({pattern: { value:emailPattern, message: 'Email is invalid' }})}
-                />
-                {errors.email && (<span className='contact-error'>{errors.email.message}</span>)}
-                <TextField 
-                    className='input' name="notes" 
-                    variant="filled" label="Notes" fullWidth 
-                    value={contactData.notes} onChange={handleChange} 
-                />
-                {(phones.length >= 1 ) ? (
-                    <select onChange={selectPhones}>
-                        <option >Select phone</option>
-                        {phones.map((phone) => (
-                            <option value={phone.value} id={phone.id}>{`${phone.value} - ${phone.type_id ? getPhoneType(phone) : 'No type'}`}</option>
+        isLoading ? (
+            <>
+                <CircularProgress disableShrink />
+                <div className="overlay2"></div>
+            </>
+        ) : (
+            <div className="contact-form">
+                <Button className="close" onClick={clear}><AiOutlineCloseCircle /></Button>
+                <form autoComplete="off" onSubmit={handleSubmit(handleSubmitData)}>
+                    <TextField
+                        className='input' name="name"
+                        variant="filled" label="Name" fullWidth
+                        onChange={() => setNoChange(false)} defaultValue={contact?.name}
+                        inputRef={register({ required: 'Name is required' })}
+                    />
+                    {errors.name && (<span className='contact-error'>{errors.name.message}</span>)}
+                    <TextField
+                        className='input' name="email"
+                        variant="filled" label="Email" fullWidth
+                        onChange={() => setNoChange(false)} defaultValue={contact?.email}
+                        inputRef={register({ pattern: { value: emailPattern, message: 'Email is invalid' } })}
+                    />
+                    {errors.email && (<span className='contact-error'>{errors.email.message}</span>)}
+                    <TextField
+                        className='input' name="notes"
+                        variant="filled" label="Notes" fullWidth
+                        defaultValue={contact?.notes} onChange={() => setNoChange(false)}
+                        inputRef={register()}
+                    />
+                    <div className="phones-fields">
+                        {fields.map((field, index) => (
+                            <div key={field.pid} className="form-inputs">
+                                <div className="phone-input">
+                                    <TextField
+                                        variant="outlined" name={`phones.${index}.value`}
+                                        label="Phone Number" fullWidth
+                                        defaultValue={field?.value} onChange={() => setNoChange(false)}
+                                        inputRef={register({ pattern: { value: phonePattern, message: 'Please enter a valid phone number' } })}
+                                    />
+                                </div>
+                                <div className="phone-types">
+                                    <select
+                                        defaultValue={field.type_id}
+                                        name={`phones.${index}.type_id`}
+                                        ref={register({ valueAsNumber: true })}>
+                                        {phoneTypes.map(({ id, value }) => (
+                                            <option value={id} key={id} >{value}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <IconButton onClick={() => removePhones(index)} ><AiOutlineCloseCircle /></IconButton>
+                            </div>
                         ))}
-                    </select>
-                ) : null}
-                <div className="form-inputs">
-                    <div className="phone-input">
-                        <TextField 
-                            style={{backgroundColor: '#fff'}} variant="outlined" 
-                            name="phone" label="Phone Number" fullWidth value={phoneData?.value || ''} 
-                            onChange={(e) => {setPhoneData({ ...phoneData, value: e.target?.value}); setNoChange(false);}} autoFocus type="phone-number" 
-                            inputRef={register({ pattern: { value: phonePattern, message: 'Please enter a valid phone number'} })}
-                        />
                     </div>
-                    <div className="phone-types">
-                        <input list="types" placeholder="Enter the type of phone" 
-                            name="type" id="type" onChange={handleChangeType} value={getPhoneType(phoneData) || '' } />
-                        <datalist id="types">
-                            {phoneTypes.map((type) => (
-                                <option value={type.value} key={type.id} />
-                            ))}
-                        </datalist>
+                    <div className="contact-buttons">
+                        <Button
+                            className="submit" style={{ width: '31%', marginInline: '1%', height: '50px', textTransform: 'capitalize' }}
+                            variant="contained" color="primary" size="large" type="submit"
+                            fullWidth disabled={noChange}>{contact ? `Save Changes` : `Add Contact`}</Button>
+                        <Button
+                            className="submit" style={{ width: '31%', marginInline: '1%', height: '50px', textTransform: 'capitalize' }}
+                            variant="contained" color="secondary" size="large" type="button"
+                            fullWidth onClick={clear}>Close</Button>
+                        <Button
+                            className="submit" style={{ width: '31%', marginInline: '1%', background: 'aliceblue', height: '50px', textTransform: 'capitalize' }}
+                            color="primary" onClick={() => append({ value: "", type_id: 1 })} type="button"
+                        ><MdAdd /> &nbsp; Add Phone</Button>
                     </div>
-                </div>
-                {errors.phone && (<span className='contact-error'>{errors.phone.message}</span>)}
-                <div className="contact-buttons">
-                    <Button 
-                        className="submit" style={{ width: '31%', marginInline: '1%', height: '50px', textTransform: 'capitalize' }} 
-                        variant="contained" color="primary" size="large" type="submit" 
-                        fullWidth disabled={noChange}>{contact ? `Save Changes` : `Add Contact`}</Button>
-                    <Button 
-                        className="submit" style={{ width: '31%', marginInline: '1%', height: '50px', textTransform: 'capitalize' }} 
-                        variant="contained" color="secondary" size="large" type="button" 
-                        fullWidth onClick={clear}>Close</Button>
-                    <Button 
-                        className="submit" style={{ width: '31%', marginInline: '1%', background: 'aliceblue', height: '50px', textTransform: 'capitalize'}} 
-                        color="primary" onClick={addPhones} type="button" 
-                        disabled={!phoneData?.value}><MdAdd /> &nbsp; Add Phone</Button>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
+        )
     )
 }
 

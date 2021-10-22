@@ -24,7 +24,7 @@ const contacts = (state = { isLoading: true, contacts: [] }, action) => {
         case UPDATE_CONTACT : 
             return {
                 ...state,
-                contacts : state.contacts.map((contact) => (contact.id === action.data.id ? action.data : contact))
+                contacts : state.contacts.map((contact) => (contact.id === action.data.data.id ? action.data.data : contact))
             };
         case CONTACT_ERROR : 
             alert(action?.data?.message);

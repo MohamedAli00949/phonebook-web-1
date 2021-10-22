@@ -7,6 +7,7 @@ export default makeStyles((theme) => ({
         borderRadius: "10px",
         padding: "10px 20px",
         boxShadow: '0px 0px 16px 4px #6e6e6e80',
+        margin: "10px",
     },
     loadingPaper: {
         display: 'flex', 
