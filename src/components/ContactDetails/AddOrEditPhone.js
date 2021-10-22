@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { TextField, Button } from '@material-ui/core';
 import { AiOutlineCloseCircle } from 'react-icons/ai';
-import { updatePhone, createPhone, UPDATE_PHONE, CREATE_PHONE } from '../../actions/phones';
+import { updatePhone, createPhone, UPDATE_PHONE, CREATE_PHONE, PHONE_ERROR } from '../../actions/phones';
 import useStyles from './styles';
 
 function AddOrEditPhone(props) {

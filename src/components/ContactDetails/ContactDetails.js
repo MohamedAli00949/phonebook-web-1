@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { deletePhone, DELETE_PHONE } from '../../actions/phones';
+import { deletePhone, DELETE_PHONE, PHONE_ERROR } from '../../actions/phones';
 
 import { MdContentCopy, MdDelete, MdModeEdit, MdAdd, MdMailOutline, MdCall, MdMoreHoriz } from "react-icons/md";
 import { Avatar, Button, Paper, Typography } from "@material-ui/core";
