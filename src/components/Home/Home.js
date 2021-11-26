@@ -54,7 +54,7 @@ const Home = (props) => {
         });
       dispatch(getTypes());
     }
-  }, []);
+  }, []); // eslint-disable-line
 
   return (
     <Grow in>

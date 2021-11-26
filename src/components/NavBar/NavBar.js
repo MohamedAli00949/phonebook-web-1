@@ -58,7 +58,7 @@ function NavBar(props) {
     }
 
     setUser(JSON.parse(localStorage.getItem("token")));
-  }, [location]);
+  }, [location]); // eslint-disable-line
 
   const logout = async () => {
     dispatch({ type: LOGOUT });

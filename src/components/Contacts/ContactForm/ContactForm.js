@@ -46,9 +46,9 @@ function ContactForm(props) {
     keyName: "pid",
   });
 
-  const emailPattern = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+  const emailPattern = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/; // eslint-disable-line
   const phonePattern =
-    /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,9}$/;
+    /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,9}$/; // eslint-disable-line
 
   const phoneTypes = types?.data;
 
@@ -78,7 +78,7 @@ function ContactForm(props) {
     } else {
       append({ value: "", type_id: 1 });
     }
-  }, [contact]);
+  }, [contact]); // eslint-disable-line
 
   const handleSubmitData = async ({ phones, ...data }) => {
     await console.log("phones", phones, "deleteed phones : ", deletedPhones);

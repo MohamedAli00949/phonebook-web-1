@@ -1,5 +1,5 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 import { MdDelete, MdModeEdit } from "react-icons/md";
 import { Avatar, IconButton, Typography } from "@material-ui/core";
@@ -14,7 +14,6 @@ const Contact = (props) => {
     handleEditContact,
     setShowDeleteContact,
   } = props;
-  const dispatch = useDispatch();
   const classes = useStyles();
 
   const { phones } = useSelector((state) => state.phones);

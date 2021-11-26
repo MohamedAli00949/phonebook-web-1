@@ -15,7 +15,7 @@ const AuthForm = () => {
   const { isLoading } = useSelector((state) => state.auth);
 
   const { register, reset, errors, handleSubmit, getValues } = useForm();
-  const emailPattern = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+  const emailPattern = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/; // eslint-disable-line
 
   const handleError = async () => {
     const error = JSON.parse(localStorage.getItem("error"));

@@ -12,7 +12,6 @@ import {
   MdMoreHoriz,
 } from "react-icons/md";
 import { Avatar, Button, Paper, Typography } from "@material-ui/core";
-import AddOrEditPhone from "./AddOrEditPhone";
 import useStyles from "./styles";
 
 const ContactDetails = ({ currentId, handleEditContact, nameAvatar }) => {
@@ -23,9 +22,6 @@ const ContactDetails = ({ currentId, handleEditContact, nameAvatar }) => {
   );
   const dispatch = useDispatch();
   const classes = useStyles();
-  const [addPhone, setAddPhone] = useState(false);
-  const [editPhone, setEditPhone] = useState(false);
-  const [phone, setPhone] = useState({});
   const { types, phones } = useSelector((state) => state.phones);
 
   const getPhoneType = (phone) => {
@@ -137,45 +133,10 @@ const ContactDetails = ({ currentId, handleEditContact, nameAvatar }) => {
                         >
                           <MdDelete />
                         </div>
-                        <div
-                          className="icon"
-                          onClick={() => {
-                            setEditPhone((eP) => !eP);
-                            setPhone(phone);
-                          }}
-                        >
-                          <MdModeEdit />
-                        </div>
                       </div>
                     )}
                   </div>
                 ))}
-                <Button
-                  className={classes.addPhone}
-                  variant="outlined"
-                  color="primary"
-                  size="large"
-                  title="Add Phone"
-                  onClick={() => setAddPhone((addPhone) => !addPhone)}
-                >
-                  Add Phone
-                </Button>
-                <div>
-                  {(addPhone || editPhone) && (
-                    <>
-                      <div className={classes.overlay}></div>
-                      <AddOrEditPhone
-                        editPhone={editPhone}
-                        contactId={contact?.id}
-                        phone={phone}
-                        setPhone={setPhone}
-                        setAddPhone={setAddPhone}
-                        setEditPhone={setEditPhone}
-                        setPhone={setPhone}
-                      />
-                    </>
-                  )}
-                </div>
               </div>
             </div>
             <div className={classes.notes}>
